@@ -43,12 +43,12 @@
           </div>
         </div>
       </Scroll>
-      <img @click="goService" class="kefu" src="./kefu@2x.png" />
-      <input @input="searchPlayer" v-model="content" type="text" class="search" placeholder="名字/赛区/籍贯">
-      <span @click="emptyContent" class="empty">+</span>
-      <m-footer></m-footer>
-      <full-loading v-show="loading"></full-loading>
     </div>
+    <img @click="goService" class="kefu" src="./kefu@2x.png" />
+    <input @input="searchPlayer" v-model="content" type="text" class="search" placeholder="名字/赛区/籍贯">
+    <span @click="emptyContent" class="empty">+</span>
+    <m-footer></m-footer>
+    <full-loading v-show="loading"></full-loading>
   </div>
 </template>
 <script>
@@ -134,30 +134,6 @@ export default {
 @import "../../common/scss/mixin.scss";
 @import "../../common/scss/variable.scss";
 .home-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0.98rem;
-  width: 100%;
-  background-color: #F0F0F0;
-
-  @-webkit-keyframes anim1{
-    0% {top: 0.7rem;opacity: 1}
-    50% {top: -0.7rem;opacity: 1}
-    75% {top: -0.7rem;opacity: 0}
-    100%{top:0.7rem;opacity: 0}
-  }
-
-  @-webkit-keyframes anim2{
-    0% {transform: translateX(-0.25rem);}
-    100%{transform: translateX(-100%);}
-  }
-  .fl {
-    float: left;
-  }
-  .fr {
-    float: right;
-  }
   .banner-default {
     width: 100%;
     height: 3rem;
@@ -166,12 +142,13 @@ export default {
     background-size: cover;
   }
   .content{
-    position: absolute;
+    position: fixed;
     top: 0;
-    bottom: 0;
     left: 0;
-    right: 0;
+    bottom: 0.98rem;
+    width: 100%;
     overflow: auto;
+    background-color: #F0F0F0;
   }
   .slider-wrapper {
     position: relative;
@@ -204,6 +181,8 @@ export default {
     position: relative;
     border-radius: 0.16rem;
     margin-bottom: 0.22rem;
+    z-index: 999;
+    transform: translateZ(0px);
     div {
       float: left;
       width: 50%;
