@@ -191,7 +191,7 @@
           margin-left: 0.3rem;
         }
         .nickname{
-          font-size: .44rem;
+          font-size: .4rem;
           color: #FFFFFF;
           line-height: 1;
           margin-top: 0.2rem;
@@ -249,6 +249,15 @@
           position: absolute;
           top: 50%;
           left: 0;
+          z-index: 10;
+          transform: translateY(-50%);
+          -moz-transform: translateY(-50%);
+          -webkit-transform: translateY(-50%);
+        }
+        span:first-child{
+          position: absolute;
+          top: 50%;
+          left: 0.64rem;
           z-index: 10;
           transform: translateY(-50%);
           -moz-transform: translateY(-50%);

@@ -110,7 +110,7 @@ export default {
       makeOrder(this.code, this.num).then(data => {
         // debugger;
         this.loading = false;
-        this.$router.push('/payment?code=' + data.code);
+        this.$router.push('/pay?code=' + data.code);
       }).catch(() => { this.loading = false; });
     }
   },
@@ -237,7 +237,6 @@ export default {
     .richText {
       margin-top: 0.2rem;
       padding: 0.3rem;
-      height: 1rem;
       background-color: #fff;
       font-size: 0.28rem;
     }
@@ -296,6 +295,7 @@ export default {
       position: fixed;
       left: 0;
       bottom: 0;
+      z-index: 99;
       .footer-left {
         font-size: 0.3rem;
         color: $color-text-s;

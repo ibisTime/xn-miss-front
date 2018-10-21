@@ -352,6 +352,7 @@ export default {
     transform: translateX(-3.45rem);
     height: 0.72rem;
     background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 0.06rem rgba(88,88,88,0.3);
     /* transition: trans; */
     font-size: 0.28rem;
     padding-left: 0.2rem;

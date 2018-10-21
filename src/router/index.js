@@ -63,7 +63,7 @@ export default new Router({
       component: Cheer
     },
     {
-      path: '/payment',
+      path: '/pay',
       component: Payment
     },
     {

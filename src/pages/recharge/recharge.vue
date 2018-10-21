@@ -146,6 +146,9 @@
         this.loading = false;
         this.text = '支付成功！';
         this.$refs.toast.show();
+        setTimeout(() => {
+          this.go();
+        }, 1200);
       }
     },
 

@@ -36,7 +36,9 @@
       },
       logout() {
         clearUser();
-        this.go('/login');
+        setTimeout(() => {
+          this.go('/login');
+        }, 800);
       }
     },
     components: {

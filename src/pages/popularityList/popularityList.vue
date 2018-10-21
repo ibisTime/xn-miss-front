@@ -7,7 +7,7 @@
             <span @click="changeCurrent('1')" :class="[currentFlag ? 'current' : '']">总榜</span>
             <span @click="changeCurrent('2')" :class="[!currentFlag ? 'current' : '']">飙升榜</span>
           </div>
-          <span class="crown"></span>
+          <span v-show="sortList.length > 0" class="crown" :class="[!currentFlag ? 'crown2' : 'crown1']"></span>
           <!-- <a class="no1" href="'javascript:void(0)'" :style="getImgSyl('' || sortList[0].bannerPics)"></a>
           <a class="no2" href="'javascript:void(0)'" :style="getImgSyl('' || sortList[1].bannerPics)"></a>
           <a class="no3" href="'javascript:void(0)'" :style="getImgSyl('' || sortList[2].bannerPics)"></a> -->
@@ -137,8 +137,8 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
-    bottom: 0.98rem;
     width: 100%;
+    height: 100%;
     background-color: #F0F0F0;
 
     @-webkit-keyframes anim1{
@@ -217,8 +217,13 @@ export default {
         left: 50%;
         bottom: 4.36rem;
         transform: translateX(-50%);
-        @include bg-image('huangguan');
         background-size: 0.3rem;
+        &.crown1{
+          @include bg-image('huangguan');
+        }
+        &.crown2{
+          @include bg-image('huo');
+        }
       }
       a {
         width: 1.3rem;

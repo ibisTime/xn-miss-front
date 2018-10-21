@@ -62,11 +62,10 @@ export default {
     login() {
       userLogin(this.code).then(info => {
         setUser(info);
-        alert(info.isNeedMobile);
         if(info.isNeedMobile === '1') {
-          this.$router.push('/home');
-        } else {
           this.$router.push('/register');
+        } else {
+          this.$router.push('/home');
         }
       }).catch(() => { alert('网络异常'); });
     }

@@ -5,7 +5,7 @@
       <div class="form-wrapper">
         <div class="form-item border-bottom-1px">
           <div class="item-input-wrapper">
-            <input type="tel" class="item-input" name="mobile" v-model="mobile" v-validate="'required|mobile'" placeholder="请输入手机号">
+            <input type="tel" class="item-input" name="mobile" v-model="mobile" v-validate="'required|mobile'" disabled placeholder="请输入手机号">
             <span v-show="errors.has('mobile')" class="error-tip">{{errors.first('mobile')}}</span>
           </div>
         </div>
