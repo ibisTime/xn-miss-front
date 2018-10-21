@@ -1,8 +1,15 @@
 <template>
   <div class="service-page-wrapper">
-    <div class="follow-wrapper">
-      <Scroll ref="scroll" class="scroll" :data="list" :pullUpLoad="pullUpLoad">
-        <div v-for="item in list" :key="item.id">
+    <div class="follow-wrapper" ref="followWrapper">
+      <Scroll
+        ref="scroll"
+        class="scroll"
+        :data="list"
+        @scroll="scroll"
+        :listen-scroll="listenScroll"
+        :probe-type="probeType"
+        :pullUpLoad="pullUpLoad">
+        <div ref="item" v-for="item in list" :key="item.id">
           <div v-if="isSelf(item.userId)">
             <div class="item-time"><span>{{formatDate(item.createDatetime)}}</span></div>
             <div class="item-wrap item-right">
@@ -21,6 +28,7 @@
         <div class="talk-bottom" ref="talkBtm"></div>
       </Scroll>
     </div>
+    <div class="new-msg-tip" @click="newMsgClick" v-if="showNewMsg">您有新消息</div>
     <div class="service-input">
       <input class="input-cont" placeholder="说点啥呗" type="text" v-model="msg">
       <button @click="sendMsg">发送</button>
@@ -46,31 +54,77 @@ export default {
       msg: '',
       code: '',
       list: [],
-      avatar: ''
+      avatar: '',
+      showNewMsg: false
     };
   },
   created() {
     setTitle('客服');
     this.pullUpLoad = null;
+    this.probeType = 3;
+    this.listenScroll = true;
     Promise.all([
       this.getPageMsg(),
       getUser()
     ]).then(([data, userInfo]) => {
-      if (data.list.length) {
-        this.code = data.list[0].code;
-        this.list = data.list[0].dataList;
-      }
       this.avatar = formatImg(userInfo.photo);
-      this.scrollToBottom();
       this.loading = false;
+      this.scrollToBottom();
+      this.refreshMsg();
     }).catch(() => {
       this.loading = false;
     });
   },
   methods: {
+    scroll() {
+      var elmEnd = this.$refs.item[this.$refs.item.length - 1];
+      let rect = elmEnd.getBoundingClientRect();
+      let top = rect.top + rect.height;
+      let maxTop = this.$refs.followWrapper.clientHeight -
+        this.$refs.talkBtm.offsetHeight;
+      if (top <= maxTop) {
+        this.showNewMsg = false;
+      }
+    },
+    newMsgClick() {
+      this.scrollToBottom();
+      this.showNewMsg = false;
+    },
     // 查询消息
     getPageMsg() {
-      return fetch(640105, { start: 1, limit: 1 });
+      return fetch(640105, { start: 1, limit: 1 }).then((data) => {
+        if (data.list.length) {
+          this.code = data.list[0].code;
+        }
+        if (this.loading) {
+          this.list = data.list[0].questionsList;
+        }
+        // 第一次加载无需判断
+        if (!this.loading && this.$refs.item.length &&
+          data.list[0].questionsList.length !== this.list.length) {
+          this.list = data.list[0].questionsList;
+          setTimeout(() => {
+            var elmEnd = this.$refs.item[this.$refs.item.length - 1];
+            let rect = elmEnd.getBoundingClientRect();
+            let top = rect.top + rect.height;
+            let maxTop = this.$refs.followWrapper.clientHeight -
+              this.$refs.talkBtm.offsetHeight;
+            if (top > maxTop) {
+              this.showNewMsg = true;
+            } else {
+              this.showNewMsg = false;
+            }
+          }, 20);
+        }
+      }).catch(() => {});
+    },
+    // 定时刷新数据
+    refreshMsg() {
+      setTimeout(() => {
+        this.getPageMsg().then(() => {
+          this.refreshMsg();
+        });
+      }, 1000);
     },
     // 发送消息
     sendMsg() {
@@ -147,15 +201,15 @@ export default {
       padding-top: 0.4rem;
     }
     .item-time {
-      padding-bottom: 0.6rem;
-      padding-top: 0.6rem;
+      padding-bottom: 30px;
+      padding-top: 30px;
       text-align: center;
       font-size: 0;
       span {
         display: inline-block;
         padding: 0.11rem 0.53rem;
-        border-radius: 4px;
-        font-size: $font-size-small;
+        border-radius: 0.08rem;
+        font-size: $font-size-medium;
         background: #E6E6E6;
         color: #999999;
       }
@@ -204,6 +258,19 @@ export default {
     .talk-bottom {
       padding-top: 0.6rem;
     }
+  }
+  .new-msg-tip {
+    position: fixed;
+    bottom: 1.1rem;
+    font-size: $font-size-medium;
+    color: #fff;
+    background-color: #999;
+    border-radius: 0.3rem;
+    padding: 0.1rem 0;
+    width: 2rem;
+    text-align: center;
+    margin-left: -1rem;
+    left: 50%;
   }
   .service-input {
     position: fixed;
