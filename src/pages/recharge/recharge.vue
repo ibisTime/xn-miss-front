@@ -64,13 +64,15 @@
         config: {
           amount: '',
           payType: '5'
-        }
+        },
+        accountNumber: ''
       };
     },
     created() {
       setTitle('充值');
     },
     mounted() {
+      this.accountNumber = this.$route.query.accountNumber;
       getAccount().then(data => {
         this.userAmount = data.filter(item => {
           return item.currency === 'CNY';
@@ -147,7 +149,7 @@
         this.text = '支付成功！';
         this.$refs.toast.show();
         setTimeout(() => {
-          this.go();
+          this.go('/money?accountNumber=' + this.accountNumber);
         }, 1200);
       }
     },

@@ -24,7 +24,6 @@
               </div>
             </div>
         </div>
-        <div class="richText">{{info.description}}</div>
         <div class="cheer-num">
           <div class="cheer-left fl">加油次数</div>
           <div class="cheer-right fr">
@@ -34,6 +33,7 @@
           </div>
         </div>
         <div class="cheer-info">您已经为他加油<i>{{info.ticketSum}}</i>次，谢谢您的支持</div>
+        <div class="richText">{{info.description}}</div>
       </Scroll>
     </div>
     <div class="footer">
@@ -61,7 +61,7 @@ export default {
       pullUpLoad: null,
       info: '',
       bannerList: [],
-      num: 0,
+      num: 1,
       code: '',
       sellTypeObj: {},
       price: 0,
@@ -79,6 +79,7 @@ export default {
       this.info = res1;
       this.bannerList = res1.pics.split('||');
       this.price = res3.cvalue;
+      this.totalAmount = (this.price * this.num).toFixed(2);
       res2.map((item) => {
         this.sellTypeObj[item.dkey] = item.dvalue;
       });
@@ -245,7 +246,8 @@ export default {
       padding: 0.3rem;
       overflow: hidden;
       border-bottom: 1px solid #F0F0F0;
-        background-color: #fff;
+      background-color: #fff;
+      position: relative;
       .cheer-left {
         font-size: 0.32rem;
           line-height: 0.36rem;
@@ -254,18 +256,30 @@ export default {
       .cheer-right {
         font-size: 0.24rem;
         color: $color-text-s;
-        position: relative;
-        height: 0.36rem;
-        line-height: 0.36rem;
+        position: absolute;
+        top: 50%;
+        right: 0.3rem;
+        z-index: 9;
+        transform: translateY(-50%);
+        height: 0.44rem;
+        line-height: 0.44rem;
         text-align: center;
         span, i {
           float: right;
           // display: inline-block;
-          width: 0.36rem;
-          height: 0.36rem;
-          line-height: 0.36rem;
-          background-size: 0.36rem;
+          height: 0.44rem;
+          line-height: 0.44rem;
+          background-size: 0.44rem;
+          background-position: center;
           background-repeat: no-repeat;
+        }
+        span{
+          width: 0.6rem;
+        }
+        i{
+          margin: 0 0.1rem;
+          font-size: 0.28rem;
+          min-width: 0.6rem;
         }
         .reduce {
           @include bg-image('reduce');
@@ -277,8 +291,7 @@ export default {
     }
     .cheer-info {
       color: $color-text-l;
-      font-size: 0.2rem;
-      line-height: 0.88rem;
+      font-size: 0.24rem;
       padding: 0.3rem;
       border-bottom: 1px solid #F0F0F0;
         background-color: #fff;

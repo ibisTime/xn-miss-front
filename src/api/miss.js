@@ -81,9 +81,9 @@ export function getFollowList(type, start = 1, limit = 10) {
   });
 }
 /**
- * 新增用户行为
+ * 加关注
  */
-export function addBehavior(type, toType, toCode) {
+export function addFollow(type, toType, toCode) {
   return fetch(640040, {
     type: type,
     toType: toType,
@@ -100,6 +100,7 @@ export function cancelFollow(toCode) {
     creater: getUserId()
   });
 }
+
 /**
  * 榜单查询
  */

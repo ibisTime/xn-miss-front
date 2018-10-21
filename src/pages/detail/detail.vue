@@ -50,16 +50,16 @@
                     <div class="noneDiscuss"> 暂无评论</div>
                 </div>
             </Scroll>
-            <div @click="changeShow" :class="[show ? 'show' : '', 'mask']"></div>
-            <div :class="[show ? 'show' : '', 'comments']">
-                <textarea v-model="content" name="" id="" cols="30" rows="10" placeholder="发表评论"></textarea>
-                <span @click="makeComment" class="publish">发表</span>
-            </div>
+        </div>
+        <div @click="changeShow" :class="[show ? 'show' : '', 'mask']"></div>
+        <div :class="[show ? 'show' : '', 'comments']">
+            <textarea v-model="content" name="" id="" cols="30" rows="10" placeholder="发表评论"></textarea>
+            <span @click="makeComment" class="publish">发表</span>
         </div>
         <div class="footer">
-            <div>
-                <span class="xin pic"></span>
-                <span>关注</span>
+            <div @click="follow">
+                <span class="xin pic" :class="isFollow ? 'xin1' : ''"></span>
+                <span>{{isFollow ? '已关注' : '关注'}}</span>
             </div>
             <div @click="changeShow">
                 <span class="pinglun pic"></span>
@@ -78,7 +78,7 @@
   import Slider from 'base/slider/slider';
   import FullLoading from 'base/full-loading/full-loading';
   import {setTitle, formatImg, formatDate} from 'common/js/util';
-  import {getPlayerDetail, getPlayerDiscuss, makeComment} from 'api/miss';
+  import {getPlayerDetail, getPlayerDiscuss, makeComment, cancelFollow, addFollow} from 'api/miss';
   import {getDictList} from 'api/general';
 
   export default {
@@ -97,7 +97,8 @@
         sellTypeObj: {},
         show: false,
         content: '',
-        price: 0
+        price: 0,
+        isFollow: false
       };
     },
     mounted() {
@@ -109,16 +110,23 @@
       getInitData() {
         Promise.all([
           getPlayerDetail(this.code),
-          getPlayerDiscuss(this.code, this.start, this.limit),
-          getDictList('match')
-        ]).then(([res1, rest2, res3]) => {
+          getDictList('match'),
+          this.getDiscuss()
+        ]).then(([res1, res2]) => {
           this.info = res1;
           this.bannerList = res1.pics.split('||');
-          this.discuss = rest2.list;
-          res3.map((item) => {
+          res2.map((item) => {
             this.sellTypeObj[item.dkey] = item.dvalue;
           });
           this.loading = false;
+        }).catch(() => {
+          this.loading = false;
+        });
+      },
+      getDiscuss() {
+        getPlayerDiscuss(this.code, this.start, this.limit).then(data => {
+          this.loading = false;
+          this.discuss = data.list;
         }).catch(() => {
           this.loading = false;
         });
@@ -137,6 +145,25 @@
       zan() {
         this.$router.push('/cheer?code=' + this.code);
       },
+      // 取消关注 / 关注
+      follow() {
+        this.loading = true;
+        if (this.isFollow) {
+          cancelFollow(this.code).then(data => {
+            this.isFollow = false;
+            this.loading = false;
+          }).catch(() => {
+            this.loading = false;
+          });
+        } else {
+          addFollow(2, 1, this.code).then(data => {
+            this.isFollow = true;
+            this.loading = false;
+          }).catch(() => {
+            this.loading = false;
+          });
+        }
+      },
       changeShow() {
         this.show = !this.show;
       },
@@ -144,7 +171,8 @@
         this.loading = true;
         makeComment(this.code, this.content).then(data => {
           this.changeShow();
-          this.loading = false;
+          this.start = 1;
+          this.getDiscuss();
         }).catch(() => {
           this.loading = false;
         });
@@ -376,7 +404,10 @@
                 .xin {
                     width: 0.34rem;
                     height: 0.34rem;
-                    @include bg-image('xin');
+                    @include bg-image('xin1');
+                    &.xin1{
+                        @include bg-image('xin');
+                    }
                 }
                 .pinglun {
                     width: 0.34rem;
@@ -402,7 +433,7 @@
             bottom: 0;
             left: 0;
             padding: 0.3rem 0.3rem 0.2rem 0.3rem;
-            z-index: 99;
+            z-index: 100;
             font-size: 0.28rem;
             background-color: #fff;
             display: none;

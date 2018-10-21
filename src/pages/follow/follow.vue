@@ -8,7 +8,7 @@
             <div class="session-right">
               <div class="title">
                 <span class="fl name">{{item.player.cname}}</span>
-                <span class="fr cheer" @click="go(item.code)">加油</span>
+                <span class="fr cheer" @click="go(item.player.code)">加油</span>
                 <span class="fr follow" @click="changeFollow(item.toCode)">取消关注</span>
               </div>
               <div class="bottom">您为她加油{{item.player.ticketSum}}次</div>
@@ -138,20 +138,23 @@ export default {
             overflow: hidden;
             .name {
               font-size: 0.32rem;
+              line-height: 0.42rem;
               color: $color-text-s;
             }
             .follow {
-              padding: 0.04rem 0.08rem;
-              // line-height: 0.42rem;
-              font-size: 0.24rem;
+              padding: 0 0.24rem;
+              line-height: 0.42rem;
+              font-size: 0.26rem;
+              border-radius: 0.04rem;
               color: $color-text-l;
               margin-right: 0.3rem;
               border: 1px solid #F0F0F0;
             }
             .cheer {
-              padding: 0.04rem 0.24rem;
-              // line-height: 0.42rem;
-              font-size: 0.24rem;
+              padding: 0 0.24rem;
+              line-height: 0.42rem;
+              font-size: 0.26rem;
+              border-radius: 0.04rem;
               color: #fff;
               background-color: $primary-color;
             }
