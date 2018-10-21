@@ -134,6 +134,12 @@ export default {
 @import "../../common/scss/mixin.scss";
 @import "../../common/scss/variable.scss";
 .home-wrapper {
+  .fl {
+    float: left;
+  }
+  .fr {
+    float: right;
+  }
   .banner-default {
     width: 100%;
     height: 3rem;
