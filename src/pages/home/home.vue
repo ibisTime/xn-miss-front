@@ -43,7 +43,7 @@
           </div>
         </div>
       </Scroll>
-      <span class="kefu"></span>
+      <img @click="goService" class="kefu" src="./kefu@2x.png" />
       <input @input="searchPlayer" v-model="content" type="text" class="search" placeholder="名字/赛区/籍贯">
       <span @click="emptyContent" class="empty">+</span>
       <m-footer></m-footer>
@@ -73,6 +73,9 @@ export default {
     };
   },
   methods: {
+    goService() {
+      this.$router.push('/service');
+    },
     getImgSyl(imgs) {
       return {
         backgroundImage: `url(${formatImg(imgs)})`
@@ -316,13 +319,10 @@ export default {
   }
   .kefu {
     position: fixed;
-    bottom: 1.3rem;
-    right: 0.6rem;
-    width: 1.1rem;
-    height: 1.1rem;
-    background-size: 1.1rem;
-    background-repeat: no-repeat;
-    @include bg-image('kefu');
+    bottom: 1.1rem;
+    right: 0.5rem;
+    width: 1.2rem;
+    height: 1.2rem;
   }
   .search {
     width: 6.9rem;
