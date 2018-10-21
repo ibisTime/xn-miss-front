@@ -31,11 +31,14 @@ export function register(mobile, smsCaptcha) {
   });
 }
 /**
- * 获取首页模块
+ * 分页获取选手
  */
-export function getmoduleList(code) {
-  return fetch(640017, {
-    status: '4'
+export function getPagePlayerList(params) {
+  return fetch(640015, {
+    start: 1,
+    limit: 10,
+    status: 4,
+    ...params
   });
 }
 /**
@@ -69,7 +72,7 @@ export function payOutOrder(info) {
 /**
  * 分页查询用户行为
  */
-export function getFollowList(type, start = 0, limit = 10) {
+export function getFollowList(type, start = 1, limit = 10) {
   return fetch(640045, {
     type: type,
     creater: getUserId(),
@@ -158,5 +161,13 @@ export function makeComment(code, content) {
 export function fuzzyQuery(fuzzyQuery) {
   return fetch(640017, {
     fuzzyQuery: fuzzyQuery
+  });
+}
+/**
+ * 详情查询加油订单
+ */
+export function getOrderDetail(code) {
+  return fetch(640036, {
+    code
   });
 }

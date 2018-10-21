@@ -95,10 +95,31 @@ export default {
       code: '',
       sellTypeObj: {},
       show: false,
-      content: ''
+      content: '',
+      price: 0
     };
   },
+  mounted() {
+    setTitle('详情');
+    this.code = this.$route.query.code;
+    this.getInitData();
+  },
   methods: {
+    getInitData() {
+      Promise.all([
+        getPlayerDetail(this.code),
+        getPlayerDiscuss(this.code, this.start, this.limit),
+        getDictList('match')
+      ]).then(([res1, rest2, res3]) => {
+        this.info = res1;
+        this.bannerList = res1.pics.split('||');
+        this.discuss = rest2.list;
+        res3.map((item) => {
+          this.sellTypeObj[item.dkey] = item.dvalue;
+        });
+        this.loading = false;
+      }).catch(() => { this.loading = false; });
+    },
     getImgSyl(imgs) {
       return {
         backgroundImage: `url(${formatImg(imgs)})`
@@ -123,23 +144,6 @@ export default {
         this.loading = false;
       }).catch(() => { this.loading = false; });
     }
-  },
-  mounted() {
-    setTitle('详情');
-    this.code = this.$route.query.code;
-    Promise.all([
-      getPlayerDetail(this.code),
-      getPlayerDiscuss(this.code, this.start, this.limit),
-      getDictList('match')
-    ]).then(([res1, rest2, res3]) => {
-      this.info = res1;
-      this.bannerList = res1.pics.split('||');
-      this.discuss = rest2.list;
-      res3.map((item) => {
-        this.sellTypeObj[item.dkey] = item.dvalue;
-      });
-      this.loading = false;
-    }).catch(() => { this.loading = false; });
   },
   components: {
     Slider,
@@ -266,8 +270,9 @@ export default {
                 .num{
                     height: 0.28rem;
                     font-size: 0.22rem;
+                    line-height: 0.28rem;
                     display: inline-block;
-                    margin-left: 0.1rem;
+                    margin-left: 0.2rem;
                 }
             }
         }

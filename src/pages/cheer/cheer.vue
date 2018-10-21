@@ -38,7 +38,7 @@
     </div>
     <div class="footer">
       <div class="footer-left fl">
-        合计金额：<i>{{num}}</i>元
+        合计金额：<i>{{totalAmount}}</i>元
       </div>
       <div class="footer-right fr" @click="zhifu">支付</div>
     </div>
@@ -51,7 +51,7 @@ import Slider from 'base/slider/slider';
 import FullLoading from 'base/full-loading/full-loading';
 import { setTitle, formatImg } from 'common/js/util';
 import { getPlayerDetail, makeOrder } from 'api/miss';
-import { getDictList } from 'api/general';
+import { getDictList, getSystemConfigCkey } from 'api/general';
 export default {
   data() {
     return {
@@ -63,8 +63,27 @@ export default {
       bannerList: [],
       num: 0,
       code: '',
-      sellTypeObj: {}
+      sellTypeObj: {},
+      price: 0,
+      totalAmount: 0
     };
+  },
+  mounted() {
+    setTitle('详情');
+    this.code = this.$route.query.code;
+    Promise.all([
+      getPlayerDetail(this.code),
+      getDictList('match'),
+      getSystemConfigCkey('price')
+    ]).then(([res1, res2, res3]) => {
+      this.info = res1;
+      this.bannerList = res1.pics.split('||');
+      this.price = res3.cvalue;
+      res2.map((item) => {
+        this.sellTypeObj[item.dkey] = item.dvalue;
+      });
+      this.loading = false;
+    }).catch(() => { this.loading = false; });
   },
   methods: {
     getImgSyl(imgs) {
@@ -76,12 +95,14 @@ export default {
       // debugger;
       // this.num = this.num === 0 ? 0 : this.num--;
       this.num--;
-      if(this.num <= 0) {
-        this.num = 0;
+      if(this.num <= 1) {
+        this.num = 1;
       }
+      this.totalAmount = (this.price * this.num).toFixed(2);
     },
     add() {
       this.num++;
+      this.totalAmount = (this.price * this.num).toFixed(2);
     },
     zhifu() {
       this.loading = true;
@@ -89,24 +110,9 @@ export default {
       makeOrder(this.code, this.num).then(data => {
         // debugger;
         this.loading = false;
-        this.$router.push('/payment?code=' + data.code + '&num=' + this.num);
+        this.$router.push('/payment?code=' + data.code);
       }).catch(() => { this.loading = false; });
     }
-  },
-  mounted() {
-    setTitle('详情');
-    this.code = this.$route.query.code;
-    Promise.all([
-      getPlayerDetail(this.code),
-      getDictList('match')
-    ]).then(([res1, res2]) => {
-      this.info = res1;
-      this.bannerList = res1.pics.split('||');
-      res2.map((item) => {
-        this.sellTypeObj[item.dkey] = item.dvalue;
-      });
-      this.loading = false;
-    }).catch(() => { this.loading = false; });
   },
   components: {
     Slider,

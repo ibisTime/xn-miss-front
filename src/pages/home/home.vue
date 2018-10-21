@@ -1,7 +1,10 @@
 <template>
   <div class="home-wrapper">
     <div class="content">
-      <Scroll class="scroll" :pullUpLoad="pullUpLoad">
+      <Scroll ref="scroll"
+              :data="dataList"
+              :hasMore="hasMore"
+              @pullingUp="getPagePlayer">
         <div class="slider-wrapper">
           <slider v-if="banners.length" :loop="loop">
             <div class="home-slider" v-for="item in banners" :key="item.code">
@@ -20,7 +23,7 @@
           </div>
         </div>
         <div class="contentList">
-          <div class="session" v-for="item in moduleList" :key="item.matchPlayCode" @click="go(item.code)">
+          <div class="session" v-for="item in dataList" :key="item.matchPlayCode" @click="go(item.code)">
             <a :href="item.url||'javascript:void(0)'" :style="getImgSyl(item.bannerPics)"></a>
             <div class="session-right">
               <div class="right-title">
@@ -42,37 +45,85 @@
             </div>
           </div>
         </div>
+        <no-result v-show="!hasMore && !(dataList && dataList.length)" title="暂无选手" class="no-result-wrapper"></no-result>
       </Scroll>
     </div>
     <img @click="goService" class="kefu" src="./kefu@2x.png" />
     <input @input="searchPlayer" v-model="content" type="text" class="search" placeholder="名字/赛区/籍贯">
-    <span @click="emptyContent" class="empty">+</span>
+    <span @click="emptyContent" class="empty"><img src="./delete.png"></span>
     <m-footer></m-footer>
-    <full-loading v-show="loading"></full-loading>
+    <full-loading v-show="loading" :title="title"></full-loading>
+    <toast :text="toastText" ref="toast"></toast>
   </div>
 </template>
 <script>
 import Scroll from 'base/scroll/scroll';
 import Slider from 'base/slider/slider';
+import NoResult from 'base/no-result/no-result';
 import FullLoading from 'base/full-loading/full-loading';
+import Toast from 'base/toast/toast';
 import { getBanner, getDictList } from 'api/general';
-import { getmoduleList, fuzzyQuery } from 'api/miss';
+import { getPagePlayerList } from 'api/miss';
 import { setTitle, formatImg } from 'common/js/util';
 import MFooter from 'components/m-footer/m-footer';
 export default {
   data() {
     return {
       title: '正在加载...',
+      toastText: '',
       loading: true,
       banners: [],
-      moduleList: [],
       loop: false,
-      pullUpLoad: null,
+      dataList: [],
+      start: 1,
+      limit: 20,
+      hasMore: true,
       sellTypeObj: {},
       content: ''
     };
   },
+  mounted() {
+    setTitle('首页');
+    this.pullUpLoad = null;
+    this.loading = true;
+    this.getInitData();
+  },
   methods: {
+    getInitData() {
+      Promise.all([
+        getBanner(),
+        getDictList('match'),
+        this.getPagePlayer()
+      ]).then(([res1, res3]) => {
+        this.banners = res1;
+        if(this.banners.length > 1) {
+          this.loop = true;
+        }
+        res3.map((item) => {
+          this.sellTypeObj[item.dkey] = item.dvalue;
+        });
+        this.loading = false;
+      }).catch(() => { this.loading = false; });
+    },
+    getPagePlayer() {
+      this.loading = true;
+      Promise.all([
+        getPagePlayerList({
+          start: this.start,
+          limit: this.limit,
+          fuzzyQuery: this.content
+        })
+      ]).then(([res1]) => {
+        if (res1.list.length < this.limit || res1.totalCount <= this.limit) {
+          this.hasMore = false;
+        }
+        this.loading = false;
+        this.dataList = res1.list;
+        this.start++;
+      }).catch(() => {
+        this.loading = false;
+      });
+    },
     goService() {
       this.$router.push('/service');
     },
@@ -91,40 +142,18 @@ export default {
       this.$router.push('/popularityList?flag=' + flag);
     },
     searchPlayer() {
-      setTimeout(() => {
-        fuzzyQuery(this.content).then(data => {
-          this.moduleList = data;
-        }).catch((e) => {});
-      }, 500);
+      this.getPagePlayer();
     },
     emptyContent() {
       this.content = '';
       this.searchPlayer();
     }
   },
-  mounted() {
-    setTitle('首页');
-    this.pullUpLoad = null;
-    this.loading = true;
-    Promise.all([
-      getBanner(),
-      getmoduleList(),
-      getDictList('match')
-    ]).then(([res1, rest2, res3]) => {
-      this.banners = res1;
-      if(this.banners.length > 1) {
-        this.loop = true;
-      }
-      this.moduleList = rest2;
-      res3.map((item) => {
-        this.sellTypeObj[item.dkey] = item.dvalue;
-      });
-      this.loading = false;
-    }).catch(() => { this.loading = false; });
-  },
   components: {
     Slider,
+    NoResult,
     FullLoading,
+    Toast,
     Scroll,
     MFooter
   }
@@ -240,8 +269,14 @@ export default {
       padding: 0.3rem;
       background: #fff;
       border-bottom: 1px solid #F0F0F0;
-      border-radius: 0.16rem;
       overflow: hidden;
+
+      &:first-child{
+        border-radius: 0.16rem 0.16rem 0 0;
+      }
+      &:last-child{
+        border-radius: 0 0 0.16rem 0.16rem;
+      }
       a {
         float: left;
         width: 2.3rem;
@@ -324,18 +359,17 @@ export default {
   }
   .empty {
     height: 0.34rem;
-    line-height: 0.34rem;
-    background-color: #999;
-    color: #F0F0F0;
+    width: 0.34rem;
     position: fixed;
     top: 0.45rem;
     right: 0.5rem;
-    -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
-    font-size: 0.4rem;
-    text-align: center;
-    border-radius: 50%;
-    width: 0.34rem;
+    z-index: 9;
+    line-height: 0;
+    font-size: 0;
+    img{
+      height: 100%;
+      vertical-align: bottom;
+    }
   }
 }
 </style>

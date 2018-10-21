@@ -49,9 +49,9 @@
         </div>
       </Scroll>
     </div>
+    <m-footer></m-footer>
     <full-loading v-show="loading"></full-loading>
     <toast ref="toast" :text="text"></toast>
-    <m-footer></m-footer>
   </div>
 </template>
 <script>

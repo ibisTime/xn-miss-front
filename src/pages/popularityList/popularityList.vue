@@ -39,10 +39,10 @@
         <div class="content1">
           <div class="session" v-for="item in sortList1" :key="item.code">
             <i>{{item.rank}}</i>
-            <a class="pic" href="'javascript:void(0)'" :style="getImgSyl(item.bannerPics)"></a>
+            <a class="pic" href="'javascript:void(0)'" :style="getImgSyl(item.player.bannerPics)"></a>
             <div class="session-right">
               <span class="name fl">{{item.playerCname}}</span>
-              <span class="tickets fr">{{item.ticketSum}}</span>
+              <span class="tickets fr">{{item.ticketSum}}票</span>
             </div>
           </div>
           <!-- <div class="session">
@@ -90,12 +90,17 @@ export default {
       this.loading = true;
       querySort(this.current).then(data => {
         this.loading = false;
-        this.sortList = data;
-        if(data.length > 3) {
-          for(let i = 3, len = data.length; i < len; i++) {
-            this.sortList1.push(data[i]);
+        let list = [];
+        let list1 = [];
+        data.map((item, i) => {
+          if (i < 3) {
+            list.push(item);
+          } else {
+            list1.push(item);
           }
-        }
+        });
+        this.sortList = list;
+        this.sortList1 = list1;
       }).catch(() => { this.loading = false; });
     },
     getImgSyl(imgs) {
@@ -282,10 +287,12 @@ export default {
           font-size: 0.32rem;
           color: $color-text-sx;
         }
-        a {
+        .pic {
           float: left;
           width: 0.9rem;
           height: 0.9rem;
+          border-radius: 0.08rem;
+          overflow: hidden;
           background-color: #fff;
         }
         .session-right {

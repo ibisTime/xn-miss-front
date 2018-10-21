@@ -101,7 +101,7 @@
         }
       },
       getIcon(item) {
-        return parseInt(item.transAmountString) > 0 ? require('./../../common/image/in@2x.png') : require('./../../common/image/out@2x.png');
+        return parseInt(item.transAmount) > 0 ? require('./../../common/image/in@2x.png') : require('./../../common/image/out@2x.png');
       }
     },
     components: {

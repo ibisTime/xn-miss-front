@@ -4,10 +4,10 @@
           当前余额：{{formatAmount(amount)}}元
       </div>
       <div class="recharge">
-          <div class="recharge-title">充值金额</div>
+          <div class="recharge-title">金额</div>
           <div class="recharge-monry">
               <span>￥</span>
-              <span>{{totalAmount}}</span>
+              <span>{{formatAmount(totalAmount)}}</span>
           </div>
       </div>
       <div class="center">
@@ -28,7 +28,7 @@
       <div class="footer">
         <div class="f-left">
           <span class="total">金额：</span>
-          <span class="price"><i>{{totalAmount}}</i>元</span>
+          <span class="price"><i>{{formatAmount(totalAmount)}}</i>元</span>
         </div>
         <div class="f-right" @click="buy">确认购买</div>
       </div>
@@ -43,7 +43,7 @@ import Slider from 'base/slider/slider';
 import FullLoading from 'base/full-loading/full-loading';
 import { setTitle, formatAmount, formatImg } from 'common/js/util';
 import { getUserDetail } from 'api/user';
-import { payOrder, queryAccountList } from 'api/miss';
+import { payOrder, queryAccountList, getOrderDetail } from 'api/miss';
 import { initPay } from 'common/js/weixin';
 import Toast from 'base/toast/toast';
 import ConfirmInput from 'base/confirm-input/confirm-input';
@@ -57,10 +57,32 @@ export default {
       amount: 0,
       code: '',
       text: '',
-      inputText: ''
+      inputText: '',
+      ordetDetail: {}
     };
   },
+  mounted() {
+    setTitle('支付');
+    this.code = this.$route.query.code;
+    this.loading = true;
+    Promise.all([
+      getUserDetail(),
+      queryAccountList(),
+      this.getDetail(this.code)
+    ]).then(([res1, res2]) => {
+      this.userDetail = res1;
+      this.amount = res2[0].amount;
+      this.loading = false;
+    }).catch(() => { this.loading = false; });
+  },
   methods: {
+    getDetail(code) {
+      getOrderDetail(code).then(data => {
+        this.loading = false;
+        this.ordetDetail = data;
+        this.totalAmount = data.amount;
+      });
+    },
     getImgSyl(imgs) {
       return {
         backgroundImage: `url(${formatImg(imgs)})`
@@ -71,6 +93,9 @@ export default {
     },
     formatAmount(amount) {
       return formatAmount(amount);
+    },
+    go(url) {
+      this.$router.push(url);
     },
     changeStatus(status) {
       this.status = status;
@@ -131,6 +156,9 @@ export default {
       this.loading = false;
       this.text = '支付成功！';
       this.$refs.toast.show();
+      setTimeout(() => {
+        this.go('/follow');
+      }, 1200);
     },
     // 输入支付密码后点击确定执行的方法
     handleInputConfirm(text) {
@@ -144,18 +172,6 @@ export default {
         this.payOrder();
       }
     }
-  },
-  mounted() {
-    setTitle('充值');
-    this.code = this.$route.query.code;
-    this.totalAmount = this.$route.query.num;
-    Promise.all([
-      getUserDetail(),
-      queryAccountList()
-    ]).then(([res1, res2]) => {
-      this.userDetail = res1;
-      this.amount = res2[0].amount;
-    });
   },
   components: {
     Toast,
@@ -202,12 +218,13 @@ export default {
         border-bottom: 1px solid #F0F0F0;
     }
     .recharge {
-        padding: 0.34rem 0.3rem;
+        padding: 0.3rem 0.3rem;
         font-size: 0.3rem;
         line-height: 1.1rem;
         background-color: #fff;
         .recharge-title {
             font-size: 0.26rem;
+            line-height: 1.5;
             color: $color-text-sx;
         }
         .recharge-monry {

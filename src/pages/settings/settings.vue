@@ -10,9 +10,9 @@
         <img src="./more@2x.png" alt="" class="fr more">
       </div>
     </div>
-    <!--<div class="btn">-->
-      <!--<button @click="logout">退出登录</button>-->
-    <!--</div>-->
+    <div class="btn">
+      <button @click="logout">退出登录</button>
+    </div>
   </div>
 </template>
 <script>

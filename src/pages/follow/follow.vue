@@ -9,7 +9,7 @@
               <div class="title">
                 <span class="fl name">{{item.player.cname}}</span>
                 <span class="fr cheer" @click="go(item.code)">加油</span>
-                <span class="fr follow" @click="changeFollow(item.toCode)">{{isFollow ? '关注': '取消关注'}}</span>
+                <span class="fr follow" @click="changeFollow(item.toCode)">取消关注</span>
               </div>
               <div class="bottom">您为她加油{{item.player.ticketSum}}次</div>
             </div>
@@ -26,7 +26,7 @@ import Scroll from 'base/scroll/scroll';
 import Slider from 'base/slider/slider';
 import FullLoading from 'base/full-loading/full-loading';
 import { setTitle, formatImg } from 'common/js/util';
-import { getFollowList, addBehavior, cancelFollow } from 'api/miss';
+import { getFollowList, cancelFollow } from 'api/miss';
 import MFooter from 'components/m-footer/m-footer';
 export default {
   data() {
@@ -40,33 +40,32 @@ export default {
       pullUpLoad: null
     };
   },
+  mounted() {
+    setTitle('我的关注');
+    this.pullUpLoad = null;
+    this.getInitData();
+  },
   methods: {
+    getInitData() {
+      getFollowList(2, this.start, this.limit).then(data => {
+        this.loading = false;
+        this.followList = data.list;
+      }).catch(() => { this.loading = false; });
+    },
     getImgSyl(imgs) {
       return {
         backgroundImage: `url(${formatImg(imgs)})`
       };
     },
     changeFollow(code) {
-      this.isFollow = !this.isFollow;
-      // debugger;
-      if(!this.isFollow) {
-        addBehavior(2, 1, code);
-      } else {
-        // debugger;
-        cancelFollow(code);
-      }
+      this.loading = true;
+      cancelFollow(code).then(data => {
+        this.getInitData();
+      }).catch(() => { this.loading = false; });
     },
     go(code) {
       this.$router.push('/cheer?code=' + code);
     }
-  },
-  mounted() {
-    setTitle('我的关注');
-    this.pullUpLoad = null;
-    getFollowList(2, this.start, this.limit).then(data => {
-      this.loading = false;
-      this.followList = data.list;
-    }).catch(() => { this.loading = false; });
   },
   components: {
     Slider,
