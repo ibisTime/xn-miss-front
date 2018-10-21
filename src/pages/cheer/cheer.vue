@@ -154,7 +154,7 @@ export default {
         height: 3rem;
     }
     a {
-      background-size: 100% 100%;
+      background-size: cover;
     }
     .content{
       position: absolute;
