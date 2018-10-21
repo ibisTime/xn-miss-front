@@ -31,7 +31,7 @@ export default {
       } else {
         this.AppId();
       }
-    }else {
+    } else {
       this.$router.push('/home');
     }
   },

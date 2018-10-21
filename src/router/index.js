@@ -7,7 +7,7 @@ Vue.use(Router);
 const Home = () => import('@/pages/home/home');
 // 注册页
 const Register = () => import('@/pages/register/register');
-// 注册页
+// 登录页
 const Login = () => import('@/pages/login/login');
 // 详情页
 const Detail = () => import('@/pages/detail/detail');
@@ -25,6 +25,16 @@ const MatchInfos = () => import('@/pages/matchInfos/matchInfos');
 const setMoneyPaw = () => import('@/pages/moneyPaw/moneyPaw');
 // 客服
 const Service = () => import('@/pages/service/service');
+// 我的
+const Me = () => import('@/pages/me/me');
+// 修改手机号
+const ChangeMobile = () => import('@/pages/change-mobile/change-mobile');
+// 设置
+const Settings = () => import('@/pages/settings/settings');
+// 余额
+const Money = () => import('@/pages/money/money');
+// 充值
+const Recharge = () => import('@/pages/recharge/recharge');
 
 export default new Router({
   routes: [
@@ -75,6 +85,26 @@ export default new Router({
     {
       path: '/service',
       component: Service
+    },
+    {
+      path: '/me',
+      component: Me
+    },
+    {
+      path: '/change-mobile',
+      component: ChangeMobile
+    },
+    {
+      path: '/settings',
+      component: Settings
+    },
+    {
+      path: '/money',
+      component: Money
+    },
+    {
+      path: '/recharge',
+      component: Recharge
     }
   ]
 });

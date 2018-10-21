@@ -14,7 +14,7 @@
             <span class="span-bg"></span>
             <span class="span-msg">人气榜</span>
           </div>
-          <div class="bang-right" @click="toUrl(0)">
+          <div class="bang-right" @click="toUrl(2)">
             <span class="span-bg"></span>
             <span class="span-msg">飙升榜</span>
           </div>
@@ -163,7 +163,7 @@ export default {
     height: 3rem;
   }
   a {
-    background-size: 100% 100%;
+    background-size: cover;
   }
   .content{
     position: absolute;

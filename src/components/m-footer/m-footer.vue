@@ -8,7 +8,7 @@
       <i></i>
       <p>关注</p>
     </router-link>
-    <router-link tag="div" class="foot-item item-3" to="/asdf">
+    <router-link tag="div" class="foot-item item-3" to="/me">
       <i></i>
       <p>我的</p>
     </router-link>

@@ -275,7 +275,6 @@ export default {
     .richText {
         margin-top: 0.2rem;
         padding: 0.3rem;
-        height: 1rem;
         font-size: 0.28rem;
         background-color: #fff;
     }
@@ -354,7 +353,7 @@ export default {
             .pinglun {
                 width: 0.34rem;
                 height: 0.34rem;
-                @include bg-image('xin');
+                @include bg-image('pinglun');
             }
             .zan {
                 width: 0.34rem;

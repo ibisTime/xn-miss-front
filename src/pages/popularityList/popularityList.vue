@@ -4,8 +4,8 @@
       <Scroll class="scroll" :pullUpLoad="pullUpLoad">
         <div class="header">
           <div class="header-title">
-            <span @click="changeCurrent" :class="[current ? 'current' : '']">总榜</span>
-            <span @click="changeCurrent" :class="[!current ? 'current' : '']">飙升榜</span>
+            <span @click="changeCurrent('1')" :class="[currentFlag ? 'current' : '']">总榜</span>
+            <span @click="changeCurrent('2')" :class="[!currentFlag ? 'current' : '']">飙升榜</span>
           </div>
           <span class="crown"></span>
           <!-- <a class="no1" href="'javascript:void(0)'" :style="getImgSyl('' || sortList[0].bannerPics)"></a>
@@ -70,70 +70,52 @@ export default {
     return {
       title: '正在加载...',
       loading: false,
-      current: true,
+      current: 1,
+      currentFlag: true,
       sortList: [],
       sortList1: [],
       pullUpLoad: null
     };
   },
+  mounted() {
+    this.pullUpLoad = null;
+    this.loading = true;
+    setTitle('榜单');
+    this.currentFlag = this.$route.query.flag === '1';
+    this.current = this.$route.query.flag;
+    this.getInitData();
+  },
   methods: {
+    getInitData() {
+      this.loading = true;
+      querySort(this.current).then(data => {
+        this.loading = false;
+        this.sortList = data;
+        if(data.length > 3) {
+          for(let i = 3, len = data.length; i < len; i++) {
+            this.sortList1.push(data[i]);
+          }
+        }
+      }).catch(() => { this.loading = false; });
+    },
     getImgSyl(imgs) {
       return {
         backgroundImage: `url(${formatImg(imgs)})`
       };
     },
-    changeCurrent() {
-      this.loading = true;
-      this.current = !this.current;
-      if(this.current) {
-        querySort(1).then(data => {
-          this.loading = false;
-          this.sortList = data;
-          if(data.length > 3) {
-            for(let i = 3, len = data.length; i < len; i++) {
-              this.sortList1.push(data[i]);
-            }
-          }
-        }).catch(() => { this.loading = false; });
-      } else {
-        querySort(2).then(data => {
-          this.loading = false;
-          this.sortList = data;
-          if(data.length > 3) {
-            for(let i = 3, len = data.length; i < len; i++) {
-              this.sortList1.push(data[i]);
-            }
-          }
-        }).catch(() => { this.loading = false; });
+    go(url) {
+      this.$router.push(url);
+    },
+    goReplace(url) {
+      this.$router.replace(url);
+    },
+    changeCurrent(flag) {
+      if(flag !== this.current) {
+        this.currentFlag = flag === '1';
+        this.current = flag;
+        this.goReplace('/popularityList?flag=' + flag);
+        this.getInitData();
       }
-    }
-  },
-  mounted() {
-    this.pullUpLoad = null;
-    this.loading = true;
-    setTitle('小姐人气榜');
-    // debugger;
-    this.current = !!(this.$route.query.flag - 0);
-    if(this.current) {
-      querySort(1).then(data => {
-        this.loading = false;
-        this.sortList = data;
-        if(data.length > 3) {
-          for(let i = 3, len = data.length; i < len; i++) {
-            this.sortList1.push(data[i]);
-          }
-        }
-      }).catch(() => { this.loading = false; });
-    } else {
-      querySort(2).then(data => {
-        this.loading = false;
-        this.sortList = data;
-        if(data.length > 3) {
-          for(let i = 3, len = data.length; i < len; i++) {
-            this.sortList1.push(data[i]);
-          }
-        }
-      }).catch(() => { this.loading = false; });
     }
   },
   components: {
@@ -176,7 +158,7 @@ export default {
         height: 3rem;
     }
     a {
-      background-size: 100% 100%;
+      background-size: cover;
     }
     .content{
       position: absolute;
@@ -227,27 +209,32 @@ export default {
         width: 0.3rem;
         height: 0.3rem;
         position: absolute;
-        left: 3.6rem;
-        bottom: 4.16rem;
+        left: 50%;
+        bottom: 4.36rem;
+        transform: translateX(-50%);
         @include bg-image('huangguan');
         background-size: 0.3rem;
       }
       a {
-        width: 1.2rem;
-        height: 1.2rem;
+        width: 1.3rem;
+        height: 1.3rem;
         position: absolute;
         bottom: 2.46rem;
         background-color: #fff;
+        z-index: 9;
+        border-radius: 50%;
+        border: 2px solid #ffe777;
         &.no1 {
-          left: 3.16rem;
-          bottom: 2.98rem;
+          left: 50%;
+          transform: translateX(-50%);
+          bottom: 3.1rem;
         }
         &.no2 {
-          left: 0.5rem;
+          left: 0.7rem;
           z-index: 9;
         }
         &.no3 {
-          left: 5.5rem;
+          right: 0.7rem;
           z-index: 9;
         }
       }

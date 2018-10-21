@@ -1,4 +1,4 @@
-// import {getCookie} from './cookie';
+import {getCookie} from './cookie';
 import Message from 'base/message/message';
 import axios from 'axios';
 import {clearUser} from 'common/js/util';
@@ -12,7 +12,7 @@ export default function fetch(code, param) {
   const url = '/api';
 
   const data = {
-    // token: getCookie('token'),
+    token: getCookie('token'),
     ...param
   };
 

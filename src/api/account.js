@@ -1,10 +1,17 @@
 import fetch from 'common/js/fetch';
 import {getUserId} from 'common/js/util';
 
-// 获取账户
-export function getAccount() {
-  return fetch(802503, {
+// 根据用户编号查询账户列表
+export function getAccount () {
+  return fetch(803503, {
+    currency: 'CNY',
     userId: getUserId()
+  });
+}
+// 根据账户编号查询账户详情
+export function getAccountDetail (accountNumber) {
+  return fetch(803502, {
+    accountNumber
   });
 }
 
@@ -17,12 +24,10 @@ export function getAccountInfo(accountNumber) {
 
 /**
  * 账户余额微信充值
- * @param params: {amount, openId, activityCode}
+ * @param params: {amount, payType}
  */
 export function recharge(params) {
-  return fetch(802710, {
-    applyUser: getUserId(),
-    channelType: 35,
+  return fetch(803702, {
     ...params
   });
 }
@@ -39,7 +44,7 @@ export function withdraw(params) {
 
 // 分页查询流水
 export function getPageFlow(start, limit, accountNumber, bizType) {
-  return fetch(802524, {
+  return fetch(803520, {
     start,
     limit,
     accountNumber,
@@ -120,7 +125,7 @@ export function getSignIntegral(accountNumber, bizType) {
 
 // 分页查询我的账户流水
 export function getAccountList(data) {
-  return fetch(802322, {
+  return fetch(803524, {
     ...data
   });
 }
