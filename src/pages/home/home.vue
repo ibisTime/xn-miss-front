@@ -3,7 +3,7 @@
     <div class="content">
       <Scroll class="scroll" :pullUpLoad="pullUpLoad">
         <div class="slider-wrapper">
-          <slider :loop="loop">
+          <slider v-if="banners.length" :loop="loop">
             <div class="home-slider" v-for="item in banners" :key="item.code">
               <a :href="item.url||'javascript:void(0)'" :style="getImgSyl(item.pic)"></a>
             </div>

@@ -23,6 +23,9 @@ const PopularityList = () => import('@/pages/popularityList/popularityList');
 const MatchInfos = () => import('@/pages/matchInfos/matchInfos');
 // 设置支付密码
 const setMoneyPaw = () => import('@/pages/moneyPaw/moneyPaw');
+// 客服
+const Service = () => import('@/pages/service/service');
+
 export default new Router({
   routes: [
     {
@@ -68,6 +71,10 @@ export default new Router({
     {
       path: '/set-money',
       component: setMoneyPaw
+    },
+    {
+      path: '/service',
+      component: Service
     }
   ]
 });
