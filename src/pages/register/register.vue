@@ -39,6 +39,7 @@
   import {sendCaptcha} from 'api/general';
   import {register} from 'api/miss';
   import FullLoading from 'base/full-loading/full-loading';
+  import { getUserId } from 'common/js/util';
   import Toast from 'base/toast/toast';
 
   export default {
@@ -57,7 +58,19 @@
         type: ''
       };
     },
+    created() {
+      if (this.getUserId()) {
+        this.text = '您未登录！';
+        this.$refs.toast.show();
+        setTimeout(() => {
+          this.go('/login');
+        }, 800);
+      }
+    },
     methods: {
+      getUserId() {
+        return getUserId();
+      },
       // 注册
       register() {
         // debugger;

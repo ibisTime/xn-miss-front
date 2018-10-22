@@ -96,6 +96,8 @@
           this.accountInfo = res2[0];
           this.loading = false;
         }).catch(() => { this.loading = false; });
+      } else {
+        this.go();
       }
     },
     methods: {
@@ -117,6 +119,9 @@
         } else {
           this.text = '您未登录！';
           this.$refs.toast.show();
+          setTimeout(() => {
+            this.go('/login');
+          }, 800);
         }
       },
       _refreshScroll() {
