@@ -41,7 +41,6 @@
   import FullLoading from 'base/full-loading/full-loading';
   import { getUserId } from 'common/js/util';
   import Toast from 'base/toast/toast';
-
   export default {
     mixins: [directiveMixin],
     data() {

@@ -16,6 +16,13 @@
           </div>
         </div>
       </Scroll>
+      <div class="no-content" v-if="followList.length == 0">
+          <img src="./miss@3x.png" alt="">
+          <p>您还没有任何关注，赶快去关注吧！</p>
+          <router-link to="/allList">
+            <div class="go-care">去关注</div>
+          </router-link>
+      </div>
     </div>
     <full-loading v-show="loading"></full-loading>
     <m-footer></m-footer>
@@ -85,7 +92,6 @@ export default {
     bottom: 0.98rem;
     width: 100%;
     background-color: #F0F0F0;
-
     @-webkit-keyframes anim1{
         0% {top: 0.7rem;opacity: 1}
         50% {top: -0.7rem;opacity: 1}
@@ -165,6 +171,32 @@ export default {
             font-size: 0.28rem;
           }
         }
+      }
+    }
+    .no-content{
+      position: absolute;
+      top: 1.8rem;
+      width: 100%;
+      text-align: center;
+      img{
+        width: 2.12rem;
+        height: 1.58rem;
+      }
+      p{
+        font-size: .24rem;
+        margin-top: .35rem;
+        color: #999999;
+      }
+      .go-care{
+        width: 2.7rem;
+        height: .8rem;
+        margin: 1rem auto;
+        line-height: .8rem;
+        font-size: .32rem;
+        text-align: center;
+        color: #fff;
+        background: #DAB86E;
+        border-radius: 8px;
       }
     }
 }

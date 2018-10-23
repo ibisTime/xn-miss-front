@@ -19,7 +19,25 @@
                 </div>
                 <div class="center">身高：{{info.height}}CM  籍贯：{{info.nativePlace}}</div>
                 <div class="bottom">
+                  <div class="botto-left">
                     <span class="match fl">{{sellTypeObj[info.match]}}</span>
+                  </div>
+                  <div class="botto-right">
+                      <ul>
+                        <li>
+                          <img src="./xin@3x.png" alt="">
+                          <span>111</span>
+                        </li>
+                        <li>
+                          <img src="./copy@3x.png" alt="">
+                          <span>11</span>
+                        </li>
+                        <li>
+                          <img src="./zan@3x.png" alt="">
+                          <span>11</span>
+                        </li>
+                      </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -211,10 +229,30 @@ export default {
         }
         .bottom {
             margin-top: 0.2rem;
-            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
             line-height: 0.4rem;
             .match {
                 font-size: 0.28rem;
+            }
+            .botto-right{
+              position: relative;
+              bottom: .2rem;
+              ul{
+                display: flex;
+                li{
+                  margin-right: .1rem;
+                  img{
+                    width: .28rem;
+                  }
+                  span{
+                    position: relative;
+                    right: .2rem;
+                    font-size: .28rem;
+                  }
+                }
+              }
+              
             }
             .bottom-right {
                 div {

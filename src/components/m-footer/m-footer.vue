@@ -61,7 +61,7 @@
     height: 0.98rem;
     width: 100%;
     border-top: 1px solid #dedede;
-    background: #fff;
+    background: #363638;
     color: $color-text-l;
     z-index: 1000;
 

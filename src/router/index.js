@@ -35,6 +35,8 @@ const Settings = () => import('@/pages/settings/settings');
 const Money = () => import('@/pages/money/money');
 // 充值
 const Recharge = () => import('@/pages/recharge/recharge');
+// 所有列表
+const AllList = () => import('@/pages/allList/allList');
 
 export default new Router({
   routes: [
@@ -105,6 +107,10 @@ export default new Router({
     {
       path: '/recharge',
       component: Recharge
+    },
+    {
+      path: '/allList',
+      component: AllList
     }
   ]
 });

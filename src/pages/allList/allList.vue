@@ -5,23 +5,13 @@
               :data="dataList"
               :hasMore="hasMore"
               @pullingUp="getPagePlayer">
-        <div class="slider-wrapper">
+        <!-- <div class="slider-wrapper">
           <slider v-if="banners.length" :loop="loop">
             <div class="home-slider" v-for="item in banners" :key="item.code">
               <a :href="item.url||'javascript:void(0)'" :style="getImgSyl(item.pic)"></a>
             </div>
           </slider>
-        </div>
-        <div class="bang">
-          <div class="bang-left" @click="toUrl(1)">
-            <span class="span-bg"></span>
-            <span class="span-msg">人气榜</span>
-          </div>
-          <div class="bang-right" @click="toUrl(2)">
-            <span class="span-bg"></span>
-            <span class="span-msg">飙升榜</span>
-          </div>
-        </div>
+        </div> -->
         <div class="contentList">
           <div class="session" v-for="item in dataList" :key="item.matchPlayCode" @click="go(item.code)">
             <a :href="item.url||'javascript:void(0)'" :style="getImgSyl(item.bannerPics)"></a>
@@ -55,21 +45,18 @@
     <img @click="goService" class="kefu" src="./kefu@2x.png" />
     <input @input="searchPlayer" v-model="content" type="text" class="search" placeholder="名字/赛区/籍贯">
     <span @click="emptyContent" class="empty"><img src="./delete.png"></span>
-    <m-footer></m-footer>
     <full-loading v-show="loading" :title="title"></full-loading>
     <toast :text="toastText" ref="toast"></toast>
   </div>
 </template>
 <script>
 import Scroll from 'base/scroll/scroll';
-import Slider from 'base/slider/slider';
 import NoResult from 'base/no-result/no-result';
 import FullLoading from 'base/full-loading/full-loading';
 import Toast from 'base/toast/toast';
 import { getBanner, getDictList } from 'api/general';
 import { getPagePlayerList } from 'api/miss';
 import { setTitle, formatImg } from 'common/js/util';
-import MFooter from 'components/m-footer/m-footer';
 export default {
   data() {
     return {
@@ -142,9 +129,6 @@ export default {
     go(code) {
       this.$router.push('/detail?code=' + code);
     },
-    toUrl(flag) {
-      this.$router.push('/popularityList?flag=' + flag);
-    },
     searchPlayer() {
       this.getPagePlayer();
     },
@@ -154,12 +138,10 @@ export default {
     }
   },
   components: {
-    Slider,
     NoResult,
     FullLoading,
     Toast,
-    Scroll,
-    MFooter
+    Scroll
   }
 };
 </script>
@@ -268,7 +250,7 @@ export default {
   }
   .contentList{
     width: 6.9rem;
-    margin: 0 auto;
+    margin: 1.5rem auto auto auto;
     .session{
       padding: 0.3rem;
       background: #fff;
@@ -289,13 +271,9 @@ export default {
       .session-right{
         margin-left: 2.6rem;
         .right-title{
-          margin-top: .1rem;
           font-size: 0.32rem;
           color: $color-text-s;
           overflow: hidden;
-          span{
-            font-weight: bold;
-          }
         }
         .info{
           margin-top: 0.3rem;

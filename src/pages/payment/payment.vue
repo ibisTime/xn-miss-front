@@ -34,7 +34,7 @@
       </div>
       <full-loading :title="title" v-show="loading"></full-loading>
       <toast ref="toast" :text="text"></toast>
-      <confirm-input ref="confirmInput" :inpType="'password'" :text="inputText" @confirm="handleInputConfirm"></confirm-input>
+      <confirm-input ref="confirmInput" class="confirmInput" :inpType="'password'" :text="inputText" @confirm="handleInputConfirm"></confirm-input>
   </div>
 </template>
 <script>
@@ -182,7 +182,7 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 @import "../../common/scss/mixin.scss";
 @import "../../common/scss/variable.scss";
 .payment-wrapper {
@@ -302,6 +302,10 @@ export default {
         color: #fff;
         font-size: $font-size-medium-x;
       }
+    }
+    .confirmInput .confirm-content{
+      position: relative;
+      top: -.6rem;
     }
 }
 </style>

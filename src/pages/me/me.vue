@@ -29,11 +29,11 @@
         </div>
         <div class="item" @click="go('/follow')">
           <div class="wrap border-bottom-1px">
-            <img class="icon" src="./collection@2x.png">
+            <img class="icon" src="./focus@2x .png">
             <span>我的关注</span>
             <img src="./more@2x.png" class="more"></div>
         </div>
-        <div class="item" @click="go('/settings')">
+        <div class="item" @click="go('/matchInfos')">
           <div class="wrap">
             <img class="icon" src="./matchInfo@2x.png">
             <span>赛事信息</span>
@@ -63,7 +63,6 @@
   import {getUserDetail} from 'api/user';
   import { getAccount } from 'api/account';
   import defaltAvatarImg from '../../common/image/avatar@2x.png';
-
   export default {
     data() {
       return {
@@ -169,13 +168,12 @@
     }
     .me-top{
       width: 100%;
-      height: 2.84rem;
+      height: 3.54rem;
       background-repeat: no-repeat;
       background-position: center;
       background-size: cover;
-      @include bg-image('me-bg');
+      @include bg-image('background');
       position: relative;
-
       .info-wrap{
         width: 100%;
         height: 1.24rem;
@@ -187,7 +185,6 @@
         transform: translateY(-50%);
         -moz-transform: translateY(-50%);
         -webkit-transform: translateY(-50%);
-
         .userPhoto{
           width: 1.24rem;
           height: 1.24rem;
@@ -208,7 +205,6 @@
           margin-top: 0.15rem;
         }
       }
-
       .icon-more {
         height: 0.3rem;
         position: absolute;
@@ -226,7 +222,6 @@
         width: 100%;
         padding: 0 0.3rem;
         background: $color-highlight-background;
-
         .wrap{
           width: 100%;
           height: 1.16rem;

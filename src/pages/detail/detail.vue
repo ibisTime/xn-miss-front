@@ -23,6 +23,10 @@
                                     <span class="zan"></span>
                                     <span class="num">{{info.ticketSum || 0}}</span>
                                 </div>
+                                <div class="b-middle fr">
+                                    <span class="zan copy"></span>
+                                    <span class="num">10</span>
+                                </div>
                                 <div class="b-right fr">
                                     <span class="zan love"></span>
                                     <span class="num">{{info.attentionSum || 0}}</span>
@@ -31,7 +35,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="richText">{{info.description}}</div>
+                <div class="richText">
+                    <p>{{info.description}}</p>
+                </div>
                 <div class="comment" v-if="discuss.length > 0">
                     <span class="pinlun">评论</span>
                     <div class="session" v-for="item in discuss" :key="item.code">
@@ -59,7 +65,7 @@
         <div class="footer">
             <div @click="follow">
                 <span class="xin pic" :class="isFollow ? 'xin1' : ''"></span>
-                <span>{{isFollow ? '已关注' : '关注'}}</span>
+                <span :class="{'current':isFollow}">{{isFollow ? '已关注' : '关注'}}</span>
             </div>
             <div @click="changeShow">
                 <span class="pinglun pic"></span>
@@ -80,7 +86,6 @@
   import {setTitle, formatImg, formatDate} from 'common/js/util';
   import {getPlayerDetail, getPlayerDiscuss, makeComment, cancelFollow, addFollow} from 'api/miss';
   import {getDictList} from 'api/general';
-
   export default {
     data() {
       return {
@@ -296,16 +301,26 @@
                         width: 0.28rem;
                         height: 0.28rem;
                         display: inline-block;
-                        @include bg-image('zan1');
+                        @include bg-image('xin1');
                         background-size: 0.28rem;
                         background-repeat: no-repeat;
+                        &.copy{
+                            @include bg-image('copy');
+                            background-size: 0.28rem;
+                        }
                         &.love {
-                            @include bg-image('xin1');
+                            @include bg-image('zan1');
                             background-size: 0.28rem;
                             background-repeat: no-repeat;
                         }
                     }
                     .b-left {
+                        margin-right: 0.4rem;
+                        span {
+                            float: left;
+                        }
+                    }
+                    .b-middle {
                         margin-right: 0.4rem;
                         span {
                             float: left;
@@ -332,6 +347,9 @@
             padding: 0.3rem;
             font-size: 0.28rem;
             background-color: #fff;
+            p{
+                line-height: .4rem;
+            }
         }
         .comment {
             margin-top: 0.2rem;
@@ -404,10 +422,14 @@
                 .xin {
                     width: 0.34rem;
                     height: 0.34rem;
-                    @include bg-image('xin1');
+                    @include bg-image('xin');
                     &.xin1{
-                        @include bg-image('xin');
+                        @include bg-image('focus');
                     }
+                }
+                .current{
+                    color: #E7D291;
+                    margin-left: .15rem;
                 }
                 .pinglun {
                     width: 0.34rem;
