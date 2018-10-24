@@ -24,7 +24,7 @@
         <img src="./checkbox.png" alt="" v-show="isChecked">
         <div class="check-border" v-show="!isChecked"></div>
       </div>
-      我已阅读并接受<router-link tag="span" to="/register/protocol?register=1">《环球小姐服务条款》</router-link>
+      我已阅读并接受<router-link tag="span" to="/protocol">《环球小姐服务条款》</router-link>
     </div>
     <div class="login-btn">
       <button @click="register">确定</button>

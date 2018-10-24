@@ -35,7 +35,7 @@
               <div class="bottom">
                 <div class="b-left fl">
                   <span class="zan"></span>
-                  <span class="num">{{item.ticketSum || 0}}</span>
+                  <span class="num">{{item.attentionSum || 0}}</span>
                 </div>
                 <div class="b-middle fl">
                   <span class="zan copy"></span>
@@ -43,7 +43,7 @@
                 </div>
                 <div class="b-right fl">
                   <span class="zan love"></span>
-                  <span class="num">{{item.attentionSum || 0}}</span>
+                  <span class="num">{{item.ticketSum || 0}}</span>
                 </div>
               </div>
             </div>
@@ -79,7 +79,7 @@ export default {
       banners: [],
       loop: false,
       dataList: [],
-      start: 1,
+      start: 0,
       limit: 20,
       hasMore: true,
       sellTypeObj: {},
@@ -123,7 +123,7 @@ export default {
         }
         this.loading = false;
         this.dataList = res1.list;
-        this.start++;
+        // this.start++;
       }).catch(() => {
         this.loading = false;
       });
@@ -289,7 +289,7 @@ export default {
       .session-right{
         margin-left: 2.6rem;
         .right-title{
-          margin-top: .1rem;
+          padding-top: .25rem;
           font-size: 0.32rem;
           color: $color-text-s;
           overflow: hidden;

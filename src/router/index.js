@@ -37,12 +37,14 @@ const Money = () => import('@/pages/money/money');
 const Recharge = () => import('@/pages/recharge/recharge');
 // 所有列表
 const AllList = () => import('@/pages/allList/allList');
+// 协议
+const Protocol = () => import('@/pages/protocol/protocol');
 
 export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/login'
+      redirect: '/home'
     },
     {
       path: '/register',
@@ -111,6 +113,10 @@ export default new Router({
     {
       path: '/allList',
       component: AllList
+    },
+    {
+      path: '/protocol',
+      component: Protocol
     }
   ]
 });

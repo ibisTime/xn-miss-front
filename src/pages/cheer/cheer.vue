@@ -26,7 +26,7 @@
                       <ul>
                         <li>
                           <img src="./xin@3x.png" alt="">
-                          <span>111</span>
+                          <span>{{info.attentionSum || 0}}</span>
                         </li>
                         <li>
                           <img src="./copy@3x.png" alt="">
@@ -34,7 +34,7 @@
                         </li>
                         <li>
                           <img src="./zan@3x.png" alt="">
-                          <span>11</span>
+                          <span>{{info.ticketSum || 0}}</span>
                         </li>
                       </ul>
                   </div>
@@ -51,7 +51,9 @@
           </div>
         </div>
         <div class="cheer-info">您已经为他加油<i>{{info.ticketSum}}</i>次，谢谢您的支持</div>
-        <div class="richText">{{info.description}}</div>
+        <div class="richText">
+          <p>{{info.description}}</p>
+        </div>
       </Scroll>
     </div>
     <div class="footer">
@@ -200,7 +202,7 @@ export default {
         display: block;
         background-repeat: no-repeat;
         background-position: center;
-        background-size: cover;
+        background-size: 100% 100%;
         }
     }
     .baseinfo {
@@ -278,6 +280,9 @@ export default {
       padding: 0.3rem;
       background-color: #fff;
       font-size: 0.28rem;
+      p{
+        line-height: .4rem;
+      }
     }
     .cheer-num {
       margin-top: 0.2rem;

@@ -112,8 +112,9 @@ export function querySort(type) {
 /**
  * 赛事列表查
  */
-export function queryMathList() {
+export function queryMathList(code) {
   return fetch(805307, {
+    code: code,
     status: 4
   });
 }

@@ -70,7 +70,7 @@ export default {
       }).catch(() => { alert('网络异常'); });
     }
   },
-  components: {
+  components: { 
     Loading,
     Confirm,
     Toast
