@@ -17,20 +17,20 @@
                         </div>
                         <div class="center">身高：{{info.height}}CM 籍贯：{{info.nativePlace}}</div>
                         <div class="bottom">
-                            <span class="match fl">{{sellTypeObj[info.match]}}</span>
-                            <div class="bottom-right fr">
-                                <div class="b-left fr">
+                            <span class="match">{{sellTypeObj[info.match]}}</span>
+                            <div class="bottom-right">
+                                <span class="b-left">
                                     <span class="zan"></span>
-                                    <span class="num">{{info.ticketSum || 0}}</span>
-                                </div>
-                                <div class="b-middle fr">
-                                    <span class="zan copy"></span>
-                                    <span class="num">10</span>
-                                </div>
-                                <div class="b-right fr">
-                                    <span class="zan love"></span>
                                     <span class="num">{{info.attentionSum || 0}}</span>
-                                </div>
+                                </span>
+                                <span class="b-middle">
+                                    <span class="zan copy"></span>
+                                    <span class="num">{{info.commentSum || 0}}</span>
+                                </span>
+                                <span class="b-right">
+                                    <span class="zan love"></span>
+                                    <span class="num">{{info.ticketSum || 0}}</span>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                 <div class="richText">
                     <p>{{info.description}}</p>
                     <div class="intructImg">
-                        <a :style="getImgSyl(info.listPic)"></a>
+                        <a :style="getImgSyl(info.pics)"></a>
                         <!-- <img :src="info.listPic" alt=""> -->
                     </div>
                 </div>
@@ -86,40 +86,42 @@
     </div>
 </template>
 <script>
-import Scroll from "base/scroll/scroll";
-import Slider from "base/slider/slider";
-import FullLoading from "base/full-loading/full-loading";
-import { setTitle, formatImg, formatDate } from "common/js/util";
+import Scroll from 'base/scroll/scroll';
+import Slider from 'base/slider/slider';
+import FullLoading from 'base/full-loading/full-loading';
+import { setTitle, formatImg, formatDate } from 'common/js/util';
 import {
   getPlayerDetail,
   getPlayerDiscuss,
   makeComment,
   cancelFollow,
   addFollow
-} from "api/miss";
-import { getDictList } from "api/general";
+} from 'api/miss';
+import { getDictList } from 'api/general';
 export default {
   data() {
     return {
-      title: "正在加载...",
+      title: '正在加载...',
       loading: true,
       loop: false,
       pullUpLoad: null,
-      info: "",
+      info: {
+        commentList: []
+      },
       discuss: [],
       bannerList: [],
       start: 0,
       limit: 10,
-      code: "",
+      code: '',
       sellTypeObj: {},
       show: false,
-      content: "",
+      content: '',
       price: 0,
       isFollow: false
     };
   },
   mounted() {
-    setTitle("详情");
+    setTitle('详情');
     this.code = this.$route.query.code;
     this.getInitData();
   },
@@ -127,16 +129,16 @@ export default {
     getInitData() {
       Promise.all([
         getPlayerDetail(this.code),
-        getDictList("match"),
-        this.getDiscuss()
+        getDictList('match'),
       ])
         .then(([res1, res2]) => {
-          console.log(res1);
           this.info = res1;
-          this.bannerList = res1.pics.split("||");
+          this.isFollow = res1.isAttention === '1';
+          this.bannerList = res1.bannerPics.split('||');
           res2.map(item => {
             this.sellTypeObj[item.dkey] = item.dvalue;
           });
+          this.getDiscuss()
           this.loading = false;
         })
         .catch(() => {
@@ -148,6 +150,7 @@ export default {
         .then(data => {
           this.loading = false;
           this.discuss = data.list;
+          this.info.commentList = data.list;
         })
         .catch(() => {
           this.loading = false;
@@ -165,7 +168,7 @@ export default {
       return formatImg(img);
     },
     zan() {
-      this.$router.push("/cheer?code=" + this.code);
+      this.$router.push('/cheer?code=' + this.code);
     },
     // 取消关注 / 关注
     follow() {
@@ -197,6 +200,7 @@ export default {
       this.loading = true;
       makeComment(this.code, this.content)
         .then(data => {
+          this.content = '';
           this.changeShow();
           this.start = 1;
           this.getDiscuss();
@@ -307,20 +311,28 @@ export default {
       font-size: 0.28rem;
     }
     .bottom {
-      margin-top: 0.2rem;
-      overflow: hidden;
+      /*margin-top: 0.2rem;*/
+      /*overflow: hidden;*/
+        margin-top: 0.2rem;
+        overflow: hidden;
+        font-size: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
       .match {
         font-size: 0.28rem;
       }
       .bottom-right {
+          display: flex;
+          align-items: center;
         div {
           position: relative;
         }
         .zan {
-          position: absolute;
-          top: 50%;
-          left: -0.2rem;
-          transform: translateY(-50%);
+          /*<!--position: absolute;-->*/
+          /*<!--top: 50%;-->*/
+          /*<!--left: -0.2rem;-->*/
+          /*<!--transform: translateY(-50%);-->*/
           width: 0.28rem;
           height: 0.28rem;
           display: inline-block;
@@ -338,22 +350,19 @@ export default {
           }
         }
         .b-left {
-          margin-right: 0.4rem;
-          span {
-            float: left;
-          }
+            display: flex;
+            align-items: center;
+            margin-right: 0.4rem;
         }
         .b-middle {
+            display: flex;
+            align-items: center;
           margin-right: 0.4rem;
-          span {
-            float: left;
-          }
         }
         .b-right {
+            display: flex;
+            align-items: center;
           margin-right: 0.4rem;
-          span {
-            float: left;
-          }
         }
         .num {
           height: 0.28rem;
@@ -469,7 +478,8 @@ export default {
       }
       .current {
         color: #e7d291;
-        margin-left: 0.15rem;
+        /*margin-left: 0.15rem;*/
+          margin-left: 0.3rem;
       }
       .pinglun {
         width: 0.34rem;

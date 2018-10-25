@@ -11,7 +11,7 @@
                 <span class="fr cheer" @click="go(item.player.code)">加油</span>
                 <span class="fr follow" @click="changeFollow(item.toCode)">取消关注</span>
               </div>
-              <div class="bottom">您为她加油{{item.player.ticketSum}}次</div>
+              <div class="bottom">您为她加油{{item.myTicketSum}}次</div>
             </div>
           </div>
         </div>

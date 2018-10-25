@@ -1,16 +1,19 @@
 <template>
   <div class="popularityList-wrapper">
     <div class="content">
-      <Scroll class="scroll" :pullUpLoad="pullUpLoad">
-        <div class="session" v-for="item in matchList" :key="item.code">
+      <Scroll class="scroll"
+              :data="matchList"
+              :hasMore="hasMore"
+              @pullingUp="getPageOrders">
+        <div class="session" v-for="item in matchList" :key="item.code" v-show="matchList.length" @click="go('match-detail?code=' + item.code)">
           <div class="top">
             <span :class="flag ? 'icon fl' : ''">已读</span>
-            <span class="title fl">{{item.title}}</span>
-            <span class="time fr">{{item.createDatetime}}</span>
+            <span class="title">{{cut(item.title,6)}}</span>
+            <span class="time fr">{{formatDate(item.createDatetime)}}</span>
           </div>
-          <div class="bottom">{{item.content}}</div>
+          <!--<div class="bottom">{{item.content}}</div>-->
         </div>
-        <div class="session">
+        <div class="session" v-show="!matchList.length">
           <div class="top">
             <span :class="flag ? 'icon fl' : ''">已读</span>
             <span class="title fl">环球小姐第5届</span>
@@ -27,30 +30,58 @@
 import Scroll from 'base/scroll/scroll';
 import Slider from 'base/slider/slider';
 import FullLoading from 'base/full-loading/full-loading';
-import { setTitle, formatImg } from 'common/js/util';
-import { queryMathList } from 'api/miss';
+import { setTitle, formatImg, formatDate } from 'common/js/util';
+import { queryMathPage } from 'api/miss';
 export default {
   data() {
     return {
       title: '正在加载...',
       loading: true,
       flag: true,
-      matchList: []
+      matchList: [],
+      start: 1,
+      limit: 10
     };
   },
   methods: {
+    formatDate(date) {
+      return formatDate(date);
+    },
     getImgSyl(imgs) {
       return {
         backgroundImage: `url(${formatImg(imgs)})`
       };
+    },
+    go(url) {
+      this.$router.push(url);
+    },
+    getPageOrders() {
+      Promise.all([
+        queryMathPage(this.start, this.limit)
+      ]).then(([res1]) => {
+        if (res1.list.length < this.limit || res1.totalCount <= this.limit) {
+          this.hasMore = false;
+        }
+        this.loading = false;
+        this.matchList = this.matchList.concat(res1.list);
+        this.start++;
+      }).catch(() => { this.loading = false; });
+    },
+    cut(str, num) {
+      if(str.length > num) {
+        return str.slice(0, num) + '...';
+      } else {
+        return str;
+      }
     }
   },
   mounted() {
     setTitle('赛事信息');
-    queryMathList().then(data => {
-      this.macthList = data.list;
-      this.loading = false;
-    }).catch(() => { this.loading = false; });
+    this.getPageOrders();
+    // queryMathPage(this.start, this.limit).then(data => {
+    //   this.macthList = data.list;
+    //   this.loading = false;
+    // }).catch(() => { this.loading = false; });
   },
   components: {
     Slider,
@@ -66,7 +97,7 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
-    bottom: 0.98rem;
+    bottom: 0;
     width: 100%;
     background-color: #F0F0F0;
 
@@ -107,10 +138,13 @@ export default {
       background-color: #fff;
       border-radius: 0.16rem;
       .top {
-        overflow: hidden;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
         .icon {
-          width: 0.56rem;
-          height: 0.35rem;
+          /*width: 0.56rem;*/
+          /*height: 0.35rem;*/
+            padding: 0.05rem;
           line-height: 0.36rem;
           background-color: #EBEBEB;
           color: $color-text-l;
@@ -125,6 +159,7 @@ export default {
           margin-left: 0.16rem;
           color: $color-text-s;
           font-size: 0.32rem;
+            flex: 1;
         }
         .time {
           font-size: 0.24rem;

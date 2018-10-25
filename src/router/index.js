@@ -21,6 +21,8 @@ const Follow = () => import('@/pages/follow/follow');
 const PopularityList = () => import('@/pages/popularityList/popularityList');
 // 赛事信息列表页
 const MatchInfos = () => import('@/pages/matchInfos/matchInfos');
+// 赛事详情页
+const MatchDetail = () => import('@/pages/match-detail/match-detail');
 // 设置支付密码
 const setMoneyPaw = () => import('@/pages/moneyPaw/moneyPaw');
 // 客服
@@ -81,6 +83,10 @@ export default new Router({
     {
       path: '/matchInfos',
       component: MatchInfos
+    },
+    {
+      path: '/match-detail',
+      component: MatchDetail
     },
     {
       path: '/set-money',

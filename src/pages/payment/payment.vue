@@ -166,8 +166,10 @@ export default {
       if(!this.pwd) {
         this.text = '请填写支付密码';
         this.$refs.toast.show();
-        this.inputText = '支付密码';
-        this.$refs.confirmInput.show();
+        setTimeout(() => {
+          this.inputText = '支付密码';
+          this.$refs.confirmInput.show();
+        }, 500);
       } else {
         this.payOrder();
       }

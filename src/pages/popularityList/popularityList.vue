@@ -4,8 +4,8 @@
       <Scroll class="scroll" :pullUpLoad="pullUpLoad">
         <div class="header">
           <div class="header-title">
-            <span @click="changeCurrent('1')" :class="[currentFlag ? 'current' : '']">总榜</span>
-            <span @click="changeCurrent('2')" :class="[!currentFlag ? 'current' : '']">飙升榜</span>
+            <span @click="changeCurrent('1')" :class="[current === '2' ? 'current' : '']">总榜</span>
+            <span @click="changeCurrent('2')" :class="[current !== '2' ? 'current' : '']">飙升榜</span>
           </div>
           <span v-show="sortList.length > 0" class="crown" :class="[!currentFlag ? 'crown2' : 'crown1']"></span>
           <!-- <a class="no1" href="'javascript:void(0)'" :style="getImgSyl('' || sortList[0].bannerPics)"></a>
@@ -15,8 +15,8 @@
             <a :class="['no'+ (index + 1 - 0)]" href="'javascript:void(0)'" :style="getImgSyl(item.player.bannerPics)"></a>
             <div :class="['sort f' + (index + 1 - 0)]">
               <div class="ranking">NO.{{(index + 1 - 0)}}</div>
-              <div class="name">{{item.playerCname}}</div>
-              <div class="tickets">{{item.ticketSum}}票</div>
+              <div class="name">{{item.player.cname}}</div>
+              <div class="tickets">{{item.ticketSum + item.fakeTicketSum}}票</div>
             </div>
           </div>
           <span class="header-bang"></span>
@@ -41,8 +41,8 @@
             <i>{{item.rank}}</i>
             <a class="pic" href="'javascript:void(0)'" :style="getImgSyl(item.player.bannerPics)"></a>
             <div class="session-right">
-              <span class="name fl">{{item.playerCname}}</span>
-              <span class="tickets fr">{{item.ticketSum}}票</span>
+              <span class="name fl">{{item.player.cname}}</span>
+              <span class="tickets fr">{{item.ticketSum + item.fakeTicketSum}}票</span>
             </div>
           </div>
           <!-- <div class="session">
@@ -115,12 +115,9 @@ export default {
       this.$router.replace(url);
     },
     changeCurrent(flag) {
-      if(flag !== this.current) {
-        this.currentFlag = flag === '1';
-        this.current = flag;
-        this.goReplace('/popularityList?flag=' + flag);
-        this.getInitData();
-      }
+      this.current = flag === '1' ? '2' : '1';
+      this.goReplace('/popularityList?flag=' + flag);
+      this.getInitData();
     }
   },
   components: {

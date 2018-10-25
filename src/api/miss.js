@@ -46,6 +46,7 @@ export function getPagePlayerList(params) {
  */
 export function getPlayerDetail(code) {
   return fetch(640016, {
+    userId: getUserId(),
     code
   });
 }
@@ -54,7 +55,7 @@ export function getPlayerDetail(code) {
  */
 export function getPlayerDiscuss(toCode, start = 0, limit = 5) {
   return fetch(628275, {
-    status: 'D',
+    statusList: ['B', 'D'],
     toCode,
     start: start,
     limit: limit
@@ -116,6 +117,16 @@ export function queryMathList(code) {
   return fetch(805307, {
     code: code,
     status: 4
+  });
+}
+/**
+ * 赛事分页查
+ */
+export function queryMathPage(start, limit) {
+  return fetch(805305, {
+    start: start,
+    limit: limit,
+    status: '4'
   });
 }
 /**

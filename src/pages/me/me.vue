@@ -119,7 +119,7 @@
           this.text = '您未登录！';
           this.$refs.toast.show();
           setTimeout(() => {
-            this.go('/login');
+            this.$router.push('/login');
           }, 800);
         }
       },

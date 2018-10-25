@@ -13,18 +13,18 @@
           </slider>
         </div>
         <div class="bang">
-          <div class="bang-left" @click="toUrl(1)">
+          <div class="bang-left" @click="toUrl(2)">
             <span class="span-bg"></span>
             <span class="span-msg">人气榜</span>
           </div>
-          <div class="bang-right" @click="toUrl(2)">
+          <div class="bang-right" @click="toUrl(1)">
             <span class="span-bg"></span>
             <span class="span-msg">飙升榜</span>
           </div>
         </div>
         <div class="contentList">
           <div class="session" v-for="item in dataList" :key="item.matchPlayCode" @click="go(item.code)">
-            <a :href="item.url||'javascript:void(0)'" :style="getImgSyl(item.bannerPics)"></a>
+            <a :href="item.url||'javascript:void(0)'" :style="getImgSyl(item.listPic)"></a>
             <div class="session-right">
               <div class="right-title">
                 <span class="fl">{{item.cname}}</span>
@@ -39,7 +39,7 @@
                 </div>
                 <div class="b-middle fl">
                   <span class="zan copy"></span>
-                  <span class="num">10</span>
+                  <span class="num">{{item.commentSum || 0}}</span>
                 </div>
                 <div class="b-right fl">
                   <span class="zan love"></span>
@@ -115,7 +115,9 @@ export default {
         getPagePlayerList({
           start: this.start,
           limit: this.limit,
-          fuzzyQuery: this.content
+          fuzzyQuery: this.content,
+          orderColumn: 'order_no',
+          orderDir: 'asc'
         })
       ]).then(([res1]) => {
         if (res1.list.length < this.limit || res1.totalCount <= this.limit) {

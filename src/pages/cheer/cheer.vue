@@ -50,7 +50,7 @@
             <span class="reduce" @click="reduce"></span>
           </div>
         </div>
-        <div class="cheer-info">您已经为他加油<i>{{info.ticketSum}}</i>次，谢谢您的支持</div>
+        <div class="cheer-info">您已经为他加油<i>{{info.myTicketSum}}</i>次，谢谢您的支持</div>
         <div class="richText">
           <p>{{info.description}}</p>
         </div>
