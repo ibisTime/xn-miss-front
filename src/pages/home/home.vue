@@ -24,12 +24,14 @@
         </div>
         <div class="contentList">
           <div class="session" v-for="item in dataList" :key="item.matchPlayCode" @click="go(item.code)">
-            <a :href="item.url||'javascript:void(0)'" :style="getImgSyl(item.listPic)"></a>
+            <div><a :href="item.url||'javascript:void(0)'" :style="getImgSyl(item.listPic)"></a></div>
+            <div class="clear"></div>
             <div class="session-right">
               <div class="right-title">
                 <span class="fl">{{item.cname}}</span>
                 <span class="fr">{{item.matchPlayCode}}</span>
               </div>
+              <div class="clear"></div>
               <div class="info">身高:{{item.height}}CM  籍贯:{{item.nativePlace}}</div>
               <div class="info">{{sellTypeObj[item.match]}}</div>
               <div class="bottom">
@@ -52,12 +54,16 @@
         <no-result v-show="!hasMore && !(dataList && dataList.length)" title="暂无选手" class="no-result-wrapper"></no-result>
       </Scroll>
     </div>
-    <img @click="goService" class="kefu" src="./kefu@2x.png" />
+    <div class="kefu">
+      <img @click="goService" src="./kefu@2x.png" />
+      <span v-show="msgNum > 0">{{msgNum}}</span>
+    </div>
     <input @input="searchPlayer" v-model="content" type="text" class="search" placeholder="名字/赛区/籍贯">
     <span @click="emptyContent" class="empty"><img src="./delete.png"></span>
     <m-footer></m-footer>
     <full-loading v-show="loading" :title="title"></full-loading>
     <toast :text="toastText" ref="toast"></toast>
+    <Confirm ref="confirm" :isTxt="msgTxt" :text="titleMsg" :confirmBtnText="qrBtn" @confirm="toLookMsg"/>
   </div>
 </template>
 <script>
@@ -70,10 +76,14 @@ import { getBanner, getDictList } from 'api/general';
 import { getPagePlayerList } from 'api/miss';
 import { setTitle, formatImg } from 'common/js/util';
 import MFooter from 'components/m-footer/m-footer';
+import { queryMathPage, getMessageDetail } from 'api/miss';
+import Confirm from 'base/confirm/confirm';
 export default {
   data() {
     return {
       title: '正在加载...',
+      titleMsg: '',
+      qrBtn: '查看',
       toastText: '',
       loading: true,
       banners: [],
@@ -83,7 +93,9 @@ export default {
       limit: 20,
       hasMore: true,
       sellTypeObj: {},
-      content: ''
+      content: '',
+      msgTxt: '赛事信息',
+      msgNum: ''
     };
   },
   mounted() {
@@ -91,6 +103,16 @@ export default {
     this.pullUpLoad = null;
     this.loading = true;
     this.getInitData();
+    queryMathPage(1, 1).then(data => {
+      if(data.list.length > 0){
+        this.titleMsg = data.list[0].eventInfo.title;
+        this.$refs.confirm.show();
+      }
+    });
+    getMessageDetail().then(data => {
+      this.msgNum = data.list[0].unreadSum;
+    })
+
   },
   methods: {
     getInitData() {
@@ -153,6 +175,9 @@ export default {
     emptyContent() {
       this.content = '';
       this.searchPlayer();
+    },
+    toLookMsg(){
+      this.$router.push('/matchInfos');
     }
   },
   components: {
@@ -161,7 +186,8 @@ export default {
     FullLoading,
     Toast,
     Scroll,
-    MFooter
+    MFooter,
+    Confirm
   }
 };
 </script>
@@ -275,7 +301,7 @@ export default {
       padding: 0.3rem;
       background: #fff;
       border-bottom: 1px solid #F0F0F0;
-      overflow: hidden;
+      display: flex;
 
       &:first-child{
         border-radius: 0.16rem 0.16rem 0 0;
@@ -289,12 +315,11 @@ export default {
         height: 2.3rem;
       }
       .session-right{
-        margin-left: 2.6rem;
+        margin-left: 0.3rem;
         .right-title{
           padding-top: .25rem;
           font-size: 0.32rem;
           color: $color-text-s;
-          overflow: hidden;
           span{
             font-weight: bold;
           }
@@ -309,7 +334,6 @@ export default {
           font-size: 0.22rem;
           margin-top: 0.4rem;
           color: $color-text-x;
-          overflow: hidden;
           div {
             position: relative;
           }
@@ -360,6 +384,23 @@ export default {
     right: 0.5rem;
     width: 1.2rem;
     height: 1.2rem;
+    img{
+      width: 100%;
+      height: 100%;
+    }
+    span{
+      position: absolute;
+      right: 0.1rem;
+      top: 0rem;
+      width: 0.3rem;
+      height: 0.3rem;
+      border-radius: 100%;
+      background-color: #a71515;
+      color: #fff;
+      font-size: 0.2rem;
+      text-align: center;
+      line-height: 0.3rem;
+    }
   }
   .search {
     width: 6.9rem;
@@ -388,6 +429,9 @@ export default {
       height: 100%;
       vertical-align: bottom;
     }
+  }
+  .clear{
+    clear: both;
   }
 }
 </style>

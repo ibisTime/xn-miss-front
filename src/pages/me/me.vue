@@ -157,6 +157,7 @@
   @import "~common/scss/variable";
   .me-wrapper {
     width: 100%;
+    padding-bottom: 1rem;
     .fl {
       float: left;
     }

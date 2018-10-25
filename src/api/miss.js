@@ -121,12 +121,15 @@ export function queryMathList(code) {
 }
 /**
  * 赛事分页查
+ * 我的消息
  */
-export function queryMathPage(start, limit) {
-  return fetch(805305, {
-    start: start,
-    limit: limit,
-    status: '4'
+export function queryMathPage(start, limit, sta) {
+  let status = sta ? sta : '';
+  return fetch(805315, {
+    userId: getUserId(),
+    start,
+    limit,
+    statusList: ['1', '0']
   });
 }
 /**
@@ -182,5 +185,14 @@ export function fuzzyQuery(fuzzyQuery) {
 export function getOrderDetail(code) {
   return fetch(640036, {
     code
+  });
+}
+
+/**
+ * 详情查询会话
+ */
+export function getMessageDetail() {
+  return fetch(640107, {
+    user1: getUserId()
   });
 }

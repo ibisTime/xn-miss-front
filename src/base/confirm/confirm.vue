@@ -3,6 +3,7 @@
     <div class="confirm" v-show="showFlag" @click.stop>
       <div class="confirm-wrapper">
         <div class="confirm-content">
+          <p v-show="isTxt" class="oper-txt">{{isTxt}}</p>
           <p v-if="isHtml" class="text" :class="textCls" v-html='text'></p>
           <p v-else class="text" :class="textCls">{{text}}</p>
           <div class="operate">
@@ -18,6 +19,10 @@
 <script type="text/ecmascript-6">
   export default {
     props: {
+      isTxt: {
+        type: String,
+        default: ''
+      },
       text: {
         type: String,
         default: ''
@@ -95,6 +100,7 @@
       z-index: 999;
       .confirm-content {
         width: 5.4rem;
+        overflow: hidden;
         border-radius: 0.26rem;
         background: $color-highlight-background;
 
@@ -102,12 +108,20 @@
           padding: 0.38rem 0.3rem;
           line-height: 0.44rem;
           text-align: center;
-          font-size: $font-size-large-s;
+          font-size: 0.3rem;
           color: $color-text-l;
 
           &.alert {
             font-size: 0.3rem;
           }
+        }
+        .oper-txt{
+          font-size: 0.4rem;
+          text-align: center;
+          padding-top: 0.15rem;
+          padding-bottom: 0.15rem;
+          color: #fff;
+          background-color: #DAB86E;
         }
 
         .operate {

@@ -143,6 +143,7 @@ export default {
             margin-top: 0.08rem;
             overflow: hidden;
             .name {
+              font-weight: 600;
               font-size: 0.32rem;
               line-height: 0.42rem;
               color: $color-text-s;

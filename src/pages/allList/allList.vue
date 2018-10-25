@@ -17,7 +17,7 @@
             <a :href="item.url||'javascript:void(0)'" :style="getImgSyl(item.bannerPics)"></a>
             <div class="session-right">
               <div class="right-title">
-                <span class="fl">{{item.cname}}</span>
+                <span class="fl name">{{item.cname}}</span>
                 <span class="fr">{{item.matchPlayCode}}</span>
               </div>
               <div class="info">身高:{{item.height}}CM  籍贯:{{item.nativePlace}}</div>
@@ -42,7 +42,7 @@
         <no-result v-show="!hasMore && !(dataList && dataList.length)" title="暂无选手" class="no-result-wrapper"></no-result>
       </Scroll>
     </div>
-    <img @click="goService" class="kefu" src="./kefu@2x.png" />
+    <!-- <img @click="goService" class="kefu" src="./kefu@2x.png" /> -->
     <input @input="searchPlayer" v-model="content" type="text" class="search" placeholder="名字/赛区/籍贯">
     <span @click="emptyContent" class="empty"><img src="./delete.png"></span>
     <full-loading v-show="loading" :title="title"></full-loading>
@@ -166,7 +166,7 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
-    bottom: 0.98rem;
+    bottom: 0rem;
     width: 100%;
     overflow: auto;
     background-color: #F0F0F0;
@@ -274,6 +274,9 @@ export default {
           font-size: 0.32rem;
           color: $color-text-s;
           overflow: hidden;
+          .name{
+            font-weight: 600;
+          }
         }
         .info{
           margin-top: 0.3rem;

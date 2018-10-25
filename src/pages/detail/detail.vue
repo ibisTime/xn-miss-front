@@ -4,7 +4,7 @@
             <Scroll class="scroll" :pullUpLoad="pullUpLoad">
                 <div class="slider-wrapper">
                     <slider :loop="loop">
-                        <div class="home-slider" v-for="item in bannerList">
+                        <div class="home-slider" v-for="(item, index) in bannerList" :key="index">
                             <a :style="getImgSyl(item)"></a>
                         </div>
                     </slider>
@@ -15,6 +15,7 @@
                             <span class="name fl">{{info.cname}}</span>
                             <span class="code fr">{{info.matchPlayCode}}</span>
                         </div>
+                        <div class="clear"></div>
                         <div class="center">身高：{{info.height}}CM 籍贯：{{info.nativePlace}}</div>
                         <div class="bottom">
                             <span class="match">{{sellTypeObj[info.match]}}</span>
@@ -83,10 +84,12 @@
             </div>
         </div>
         <full-loading v-show="loading"></full-loading>
+        <Toast :text="textMsg" ref="toast"/>
     </div>
 </template>
 <script>
 import Scroll from 'base/scroll/scroll';
+import Toast from 'base/toast/toast';
 import Slider from 'base/slider/slider';
 import FullLoading from 'base/full-loading/full-loading';
 import { setTitle, formatImg, formatDate } from 'common/js/util';
@@ -101,6 +104,7 @@ import { getDictList } from 'api/general';
 export default {
   data() {
     return {
+      textMsg: '',
       title: '正在加载...',
       loading: true,
       loop: false,
@@ -197,13 +201,24 @@ export default {
       this.show = !this.show;
     },
     makeComment() {
+      if(this.content == ''){
+        this.textMsg = '内容不能为空哦';
+        this.$refs.toast.show();
+        return;
+      }
       this.loading = true;
       makeComment(this.code, this.content)
         .then(data => {
-          this.content = '';
-          this.changeShow();
-          this.start = 1;
-          this.getDiscuss();
+          this.loading = false;
+          this.textMsg = '已发送';
+          this.$refs.toast.show();
+          setTimeout(() => {
+            this.loading = true;
+            this.content = '';
+            this.changeShow();
+            this.start = 1;
+            this.getDiscuss();
+          }, 1500);
         })
         .catch(() => {
           this.loading = false;
@@ -213,7 +228,8 @@ export default {
   components: {
     Slider,
     FullLoading,
-    Scroll
+    Scroll,
+    Toast
   }
 };
 </script>
@@ -304,17 +320,16 @@ export default {
     .title {
       font-size: 0.32rem;
       color: $color-text-s;
-      overflow: hidden;
+      span{
+        font-weight: 600;
+      }
     }
     .center {
       margin-top: 0.2rem;
       font-size: 0.28rem;
     }
     .bottom {
-      /*margin-top: 0.2rem;*/
-      /*overflow: hidden;*/
         margin-top: 0.2rem;
-        overflow: hidden;
         font-size: 0;
         display: flex;
         align-items: center;
@@ -544,6 +559,9 @@ export default {
     &.show {
       display: block;
     }
+  }
+  .clear{
+    clear: both;
   }
 }
 </style>

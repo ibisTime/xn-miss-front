@@ -27,11 +27,11 @@
         </div>
         <div class="talk-bottom" ref="talkBtm"></div>
       </Scroll>
-    </div>
-    <div class="new-msg-tip" @click="newMsgClick" v-if="showNewMsg">您有新消息</div>
-    <div class="service-input">
-      <input class="input-cont" placeholder="说点啥呗" type="text" v-model="msg">
-      <button @click="sendMsg">发送</button>
+      <div class="new-msg-tip" @click="newMsgClick" v-if="showNewMsg">您有新消息</div>
+      <div class="service-input">
+        <input class="input-cont" placeholder="说点啥呗" type="text" v-model="msg">
+        <button @click="sendMsg">发送</button>
+      </div>
     </div>
     <full-loading v-show="loading"></full-loading>
     <toast ref="toast" text="消息不能为空"></toast>
@@ -92,7 +92,7 @@ export default {
     },
     // 查询消息
     getPageMsg() {
-      return fetch(640105, { start: 1, limit: 1 }).then((data) => {
+      return fetch(640105, { start: 1, limit: 1, userId: getUserId() }).then((data) => {
         if (data.list.length) {
           this.code = data.list[0].code;
         }
@@ -261,7 +261,7 @@ export default {
   }
   .new-msg-tip {
     position: fixed;
-    bottom: 1.1rem;
+    bottom: 1.6rem;
     font-size: $font-size-medium;
     color: #fff;
     background-color: #999;
@@ -274,7 +274,7 @@ export default {
   }
   .service-input {
     position: fixed;
-    bottom: 0;
+    bottom: 0.5rem;
     left: 0;
     width: 100%;
     height: 0.98rem;

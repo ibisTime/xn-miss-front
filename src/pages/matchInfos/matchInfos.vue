@@ -7,10 +7,12 @@
               @pullingUp="getPageOrders">
         <div class="session" v-for="item in matchList" :key="item.code" v-show="matchList.length" @click="go('match-detail?code=' + item.code)">
           <div class="top">
-            <span :class="flag ? 'icon fl' : ''">已读</span>
-            <span class="title">{{cut(item.title,6)}}</span>
+            <span :class="item.status == 0 ? 'icon flag' : 'icon fl'">{{statusTxt[item.status]}}</span>
+            <!-- {{cut(item.title,6)}} -->
+            <span class="title"></span>
             <span class="time fr">{{formatDate(item.createDatetime)}}</span>
           </div>
+          <div v-html="item.eventInfo.content" class="content-info"></div>
           <!--<div class="bottom">{{item.content}}</div>-->
         </div>
         <div class="session" v-show="!matchList.length">
@@ -40,7 +42,12 @@ export default {
       flag: true,
       matchList: [],
       start: 1,
-      limit: 10
+      limit: 10,
+      hasMore: true,
+      statusTxt: {
+        '0': '待阅读',
+        '1': '已阅读'
+      }
     };
   },
   methods: {
@@ -68,10 +75,12 @@ export default {
       }).catch(() => { this.loading = false; });
     },
     cut(str, num) {
-      if(str.length > num) {
-        return str.slice(0, num) + '...';
-      } else {
-        return str;
+      if(str){
+        if(str.length > num) {
+          return str.slice(0, num) + '...';
+        } else {
+          return str;
+        }
       }
     }
   },
@@ -132,7 +141,7 @@ export default {
     }
     .session {
       width: 6.9rem;
-      height: 1.65rem;
+      // height: 1.65rem;
       margin: 0.3rem auto;
       padding: 0.3rem;
       background-color: #fff;
@@ -141,6 +150,9 @@ export default {
           overflow: hidden;
           display: flex;
           align-items: center;
+          span{
+            font-size: 0.2rem;
+          }
         .icon {
           /*width: 0.56rem;*/
           /*height: 0.35rem;*/
@@ -165,6 +177,11 @@ export default {
           font-size: 0.24rem;
           color: $color-text-l;
         }
+      }
+      .content-info{
+        text-indent:1em;
+        padding: 0.15rem 0;
+        font-size: 0.3rem;
       }
       .bottom {
         margin-top: 0.2rem;
