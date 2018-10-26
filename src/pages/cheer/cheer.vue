@@ -5,6 +5,7 @@
         <div class="slider-wrapper">
           <slider :loop="loop">
             <div class="home-slider" v-for="item in bannerList">
+                <!--<img :src="formatImg(item)">-->
               <a :style="getImgSyl(item)"></a>
             </div>
           </slider>
@@ -14,7 +15,7 @@
               <a :style="getImgSyl(info.bannerPics)"></a>
               <div class="baseinfo-right">
                 <div class="title">
-                    <span class="name fl">{{info.cname}}</span>
+                    <span class="name">{{info.cname}}</span>
                     <span class="code fr">{{info.matchPlayCode}}</span>
                 </div>
                 <div class="center">身高：{{info.height}}CM  籍贯：{{info.nativePlace}}</div>
@@ -30,7 +31,7 @@
                         </li>
                         <li>
                           <img src="./copy@3x.png" alt="">
-                          <span>11</span>
+                          <span>{{info.commentSum || 0}}</span>
                         </li>
                         <li>
                           <img src="./zan@3x.png" alt="">
@@ -107,6 +108,9 @@ export default {
     }).catch(() => { this.loading = false; });
   },
   methods: {
+    formatImg(img) {
+      return formatImg(img);
+    },
     getImgSyl(imgs) {
       return {
         backgroundImage: `url(${formatImg(imgs)})`
@@ -197,12 +201,12 @@ export default {
         height: 100%;
         }
         a {
-        width: 100%;
+        /*width: 100%;*/
         height: 100%;
         display: block;
         background-repeat: no-repeat;
         background-position: center;
-        background-size: 100% 100%;
+        background-size: contain;
         }
     }
     .baseinfo {
@@ -220,9 +224,9 @@ export default {
         }
         .title {
             margin-top: 0.1rem;
-            font-size: 0.32rem;
+            font-size: 0.34rem;
             color: $color-text-s;
-            overflow: hidden;
+            font-family: 'PingFangSC-Semibold';
         }
         .center {
             margin-top: 0.2rem;
@@ -343,15 +347,25 @@ export default {
       }
     }
     .footer {
-      width: 100%;
-      padding: 0.3rem;
-      line-height: 0.84rem;
-      overflow: hidden;
-      background-color: #fff;
-      position: fixed;
-      left: 0;
-      bottom: 0;
-      z-index: 99;
+      /*width: 100%;*/
+      /*padding: 0.3rem;*/
+      /*line-height: 0.84rem;*/
+      /*overflow: hidden;*/
+      /*background-color: #fff;*/
+      /*position: fixed;*/
+      /*left: 0;*/
+      /*bottom: 0;*/
+      /*z-index: 99;*/
+        width: 100%;
+        padding: 0.1rem 0.2rem;
+        line-height: 0.84rem;
+        overflow: hidden;
+        background-color: #fff;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        z-index: 99;
+        border-top: 1px solid $color-border;
       .footer-left {
         font-size: 0.3rem;
         color: $color-text-s;

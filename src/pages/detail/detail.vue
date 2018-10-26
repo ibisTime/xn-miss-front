@@ -5,6 +5,7 @@
                 <div class="slider-wrapper">
                     <slider :loop="loop">
                         <div class="home-slider" v-for="(item, index) in bannerList" :key="index">
+                            <!--<img :src="formatImg(item)">-->
                             <a :style="getImgSyl(item)"></a>
                         </div>
                     </slider>
@@ -180,8 +181,11 @@ export default {
       if (this.isFollow) {
         cancelFollow(this.code)
           .then(data => {
-            this.isFollow = false;
-            this.loading = false;
+            if(data.isSuccess) {
+              this.isFollow = false;
+              this.loading = false;
+              this.info.attentionSum--;
+            }
           })
           .catch(() => {
             this.loading = false;
@@ -189,8 +193,11 @@ export default {
       } else {
         addFollow(2, 1, this.code)
           .then(data => {
-            this.isFollow = true;
-            this.loading = false;
+            if(data.code) {
+              this.isFollow = true;
+              this.loading = false;
+              this.info.attentionSum++;
+            }
           })
           .catch(() => {
             this.loading = false;
@@ -305,12 +312,12 @@ export default {
       height: 100%;
     }
     a {
-      width: 100%;
+        /*width: 100%;*/
       height: 100%;
       display: block;
       background-repeat: no-repeat;
       background-position: center;
-      background-size: 100% 100%;
+      background-size: contain;
     }
   }
   .baseinfo {
@@ -402,12 +409,12 @@ export default {
         margin-top: .2rem;
         height: 3.5rem;
         a {
-            width: 100%;
+            /*width: 100%;*/
             height: 100%;
             display: block;
             background-repeat: no-repeat;
             background-position: center;
-            background-size: 100% 100%;
+            background-size: contain;
 
         }
     }

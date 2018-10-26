@@ -57,6 +57,7 @@
     mounted() {
       setTitle('设置支付密码');
       this.userId = getCookie('userId');
+      // if(this.)
       this.loading = true;
       Promise.all([
         getUserDetail({userId: this.userId})

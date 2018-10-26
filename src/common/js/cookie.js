@@ -27,3 +27,26 @@ export function delCookie(name) {
     document.cookie = name + '=' + cval + ';expires=' + exp.toGMTString() + ';path=/;';
   }
 }
+
+export function setSession(name, value, expires) {
+  // var expr = '';
+  // // if (!expires) {
+  // //   var Days = 30;
+  // //   var exp = new Date();
+  // //   exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+  // //   expr = ';expires=' + exp.toGMTString();
+  // // }
+  // document.cookie = name + '=' + escape(value) + expr + ';path=/;';
+  sessionStorage.setItem(name, value);
+}
+
+export function getSession(name) {
+  // var reg = new RegExp('(^| )' + name + '=([^;]*)(;|$)');
+  // var arr = document.cookie.match(reg);
+  // if (arr) {
+  //   return unescape(arr[2]);
+  // } else {
+  //   return null;
+  // }
+  return sessionStorage.getItem(name);
+}

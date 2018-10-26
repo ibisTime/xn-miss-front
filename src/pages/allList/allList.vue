@@ -1,6 +1,7 @@
 <template>
   <div class="home-wrapper">
-    <div class="content">
+      <input @input="searchPlayer" v-model="content" type="text" class="search" placeholder="名字/赛区/籍贯">
+      <div class="content">
       <Scroll ref="scroll"
               :data="dataList"
               :hasMore="hasMore"
@@ -14,7 +15,7 @@
         </div> -->
         <div class="contentList">
           <div class="session" v-for="item in dataList" :key="item.matchPlayCode" @click="go(item.code)">
-            <a :href="item.url||'javascript:void(0)'" :style="getImgSyl(item.bannerPics)"></a>
+            <a :href="item.url||'javascript:void(0)'" :style="getImgSyl(item.listPic)"></a>
             <div class="session-right">
               <div class="right-title">
                 <span class="fl name">{{item.cname}}</span>
@@ -25,15 +26,15 @@
               <div class="bottom">
                 <div class="b-left fl">
                   <span class="zan"></span>
-                  <span class="num">{{item.ticketSum || 0}}</span>
+                  <span class="num">{{item.attentionSum || 0}}</span>
                 </div>
                 <div class="b-middle fl">
                   <span class="zan copy"></span>
-                  <span class="num">10</span>
+                  <span class="num">{{item.commentSum || 0}}</span>
                 </div>
                 <div class="b-right fl">
                   <span class="zan love"></span>
-                  <span class="num">{{item.attentionSum || 0}}</span>
+                  <span class="num">{{item.ticketSum || 0}}</span>
                 </div>
               </div>
             </div>
@@ -43,7 +44,7 @@
       </Scroll>
     </div>
     <!-- <img @click="goService" class="kefu" src="./kefu@2x.png" /> -->
-    <input @input="searchPlayer" v-model="content" type="text" class="search" placeholder="名字/赛区/籍贯">
+    <!--<input @input="searchPlayer" v-model="content" type="text" class="search" placeholder="名字/赛区/籍贯">-->
     <span @click="emptyContent" class="empty"><img src="./delete.png"></span>
     <full-loading v-show="loading" :title="title"></full-loading>
     <toast :text="toastText" ref="toast"></toast>
@@ -102,7 +103,9 @@ export default {
         getPagePlayerList({
           start: this.start,
           limit: this.limit,
-          fuzzyQuery: this.content
+          fuzzyQuery: this.content,
+          orderColumn: 'order_no',
+          orderDir: 'asc'
         })
       ]).then(([res1]) => {
         if (res1.list.length < this.limit || res1.totalCount <= this.limit) {
@@ -164,7 +167,7 @@ export default {
   }
   .content{
     position: fixed;
-    top: 0;
+    top: 1.3rem;
     left: 0;
     bottom: 0rem;
     width: 100%;
@@ -343,7 +346,7 @@ export default {
   .search {
     width: 6.9rem;
     position: fixed;
-    top: 0.3rem;
+    top: 0.2rem;
     left: 50%;
     transform: translateX(-3.45rem);
     height: 0.72rem;

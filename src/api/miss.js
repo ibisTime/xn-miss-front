@@ -123,7 +123,7 @@ export function queryMathList(code) {
  * 赛事分页查
  * 我的消息
  */
-export function queryMathPage(start, limit, sta) {
+export function queryMathPage10(start, limit, sta) {
   let status = sta ? sta : '';
   return fetch(805315, {
     userId: getUserId(),
@@ -132,6 +132,24 @@ export function queryMathPage(start, limit, sta) {
     statusList: ['1', '0']
   });
 }
+
+export function queryMathPage0(start, limit, sta) {
+  let status = sta ? sta : '';
+  return fetch(805315, {
+    userId: getUserId(),
+    start,
+    limit,
+    statusList: ['0']
+  });
+}
+
+// 阅读我的消息
+export function readMessage(id) {
+  return fetch(805310, {
+    id
+  });
+}
+
 /**
  * 下单加油订单
  */

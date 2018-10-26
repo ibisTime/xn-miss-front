@@ -15,6 +15,7 @@
   import MHeader from 'components/m-header/m-header';
   import FullLoading from 'base/full-loading/full-loading';
   import { getMessageDetail } from 'api/biz';
+  import { readMessage } from 'api/miss';
   import { setTitle, formatDate, formatImg } from 'common/js/util';
 
   export default {
@@ -33,11 +34,24 @@
       setTitle('公告详情');
       this.pullUpLoad = null;
       let code = this.$route.query.code;
+      let id = this.$route.query.id;
+      let status = this.$route.query.status;
       this.loading = true;
+      // Promise.all([
+      //   getMessageDetail({
+      //     code: code
+      //   }),
+      //
+      // ])
       getMessageDetail({
         code: code
       }).then((res) => {
         this.detail = res;
+        if(status === '0') {
+          readMessage(id).then(() => {
+            this.loading = false;
+          });
+        }
         this.loading = false;
       }).catch(() => { this.loading = false; });
     },

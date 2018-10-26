@@ -4,7 +4,7 @@
       <Scroll class="scroll" :pullUpLoad="pullUpLoad">
         <div class="content1">
           <div class="session" v-for="item in followList" :key="item.code">
-            <a :style="getImgSyl(item.player.bannerPics)"></a>
+            <a :style="getImgSyl(item.player.listPic)"></a>
             <div class="session-right">
               <div class="title">
                 <span class="fl name">{{item.player.cname}}</span>
@@ -36,6 +36,7 @@ import FullLoading from 'base/full-loading/full-loading';
 import { setTitle, formatImg, getUserId } from 'common/js/util';
 import { getFollowList, cancelFollow } from 'api/miss';
 import MFooter from 'components/m-footer/m-footer';
+import Toast from 'base/toast/toast';
 export default {
   data() {
     return {
@@ -92,7 +93,8 @@ export default {
     Slider,
     FullLoading,
     Scroll,
-    MFooter
+    MFooter,
+    Toast
   }
 };
 </script>

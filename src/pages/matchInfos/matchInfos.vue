@@ -5,24 +5,16 @@
               :data="matchList"
               :hasMore="hasMore"
               @pullingUp="getPageOrders">
-        <div class="session" v-for="item in matchList" :key="item.code" v-show="matchList.length" @click="go('match-detail?code=' + item.code)">
+        <div class="session" v-for="item in matchList" :key="item.code" v-show="matchList.length" @click="go('match-detail?code=' + item.toCode + '&id=' + item.id + '&status=' + item.status)">
           <div class="top">
             <span :class="item.status == 0 ? 'icon flag' : 'icon fl'">{{statusTxt[item.status]}}</span>
-            <!-- {{cut(item.title,6)}} -->
-            <span class="title"></span>
+            <span class="title">{{cut(item.eventInfo.title,6)}}</span>
             <span class="time fr">{{formatDate(item.createDatetime)}}</span>
           </div>
-          <div v-html="item.eventInfo.content" class="content-info"></div>
+          <!--<div v-html="item.content" class="content-info"></div>-->
           <!--<div class="bottom">{{item.content}}</div>-->
         </div>
-        <div class="session" v-show="!matchList.length">
-          <div class="top">
-            <span :class="flag ? 'icon fl' : ''">已读</span>
-            <span class="title fl">环球小姐第5届</span>
-            <span class="time fr">2018.10.5 5:41</span>
-          </div>
-          <div class="bottom">环球小姐第5届辅助文字辅助文字第5届辅助文字辅助文字</div>
-        </div>
+        <no-result v-show="!hasMore && !(matchList && matchList.length)" title="暂无赛事" class="no-result-wrapper"></no-result>
       </Scroll>
     </div>
     <full-loading v-show="loading"></full-loading>
@@ -32,8 +24,10 @@
 import Scroll from 'base/scroll/scroll';
 import Slider from 'base/slider/slider';
 import FullLoading from 'base/full-loading/full-loading';
+import NoResult from 'base/no-result/no-result';
 import { setTitle, formatImg, formatDate } from 'common/js/util';
-import { queryMathPage } from 'api/miss';
+import { queryMathPage10 } from 'api/miss';
+import { getDictList } from 'api/general';
 export default {
   data() {
     return {
@@ -44,10 +38,7 @@ export default {
       start: 1,
       limit: 10,
       hasMore: true,
-      statusTxt: {
-        '0': '待阅读',
-        '1': '已阅读'
-      }
+      statusTxt: {}
     };
   },
   methods: {
@@ -64,7 +55,7 @@ export default {
     },
     getPageOrders() {
       Promise.all([
-        queryMathPage(this.start, this.limit)
+        queryMathPage10(this.start, this.limit)
       ]).then(([res1]) => {
         if (res1.list.length < this.limit || res1.totalCount <= this.limit) {
           this.hasMore = false;
@@ -75,18 +66,26 @@ export default {
       }).catch(() => { this.loading = false; });
     },
     cut(str, num) {
-      if(str){
+      if(str) {
         if(str.length > num) {
           return str.slice(0, num) + '...';
         } else {
           return str;
         }
       }
+    },
+    getStatus() {
+      getDictList('read_status').then((res) => {
+        res.map((item) => {
+          this.statusTxt[item.dkey] = item.dvalue;
+        });
+      });
     }
   },
   mounted() {
     setTitle('赛事信息');
     this.getPageOrders();
+    this.getStatus();
     // queryMathPage(this.start, this.limit).then(data => {
     //   this.macthList = data.list;
     //   this.loading = false;
@@ -95,7 +94,8 @@ export default {
   components: {
     Slider,
     FullLoading,
-    Scroll
+    Scroll,
+    NoResult
   }
 };
 </script>

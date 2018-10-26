@@ -92,7 +92,7 @@ export default {
     },
     // 查询消息
     getPageMsg() {
-      return fetch(640105, { start: 1, limit: 1, userId: getUserId() }).then((data) => {
+      return fetch(640105, { start: 1, limit: 1, user1: getUserId() }).then((data) => {
         if (data.list.length) {
           this.code = data.list[0].code;
         }
@@ -114,17 +114,20 @@ export default {
             } else {
               this.showNewMsg = false;
             }
-          }, 20);
+          }, 20); // 20
         }
       }).catch(() => {});
     },
     // 定时刷新数据
     refreshMsg() {
-      setTimeout(() => {
-        this.getPageMsg().then(() => {
-          this.refreshMsg();
-        });
+      this.interval = setInterval(() => {
+        this.getPageMsg();
       }, 1000);
+      // this.timer = setTimeout(() => {
+      //   this.getPageMsg().then(() => {
+      //     this.refreshMsg();
+      //   });
+      // }, 1000); // 1000
     },
     // 发送消息
     sendMsg() {
@@ -177,6 +180,9 @@ export default {
     isSelf(userId) {
       return userId === getUserId();
     }
+  },
+  beforeDestroy() {
+    clearInterval(this.interval);
   },
   components: {
     Slider,

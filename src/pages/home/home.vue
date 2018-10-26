@@ -63,7 +63,7 @@
     <m-footer></m-footer>
     <full-loading v-show="loading" :title="title"></full-loading>
     <toast :text="toastText" ref="toast"></toast>
-    <Confirm ref="confirm" :isTxt="msgTxt" :text="titleMsg" :confirmBtnText="qrBtn" @confirm="toLookMsg"/>
+    <Confirm ref="confirm" :isTxt="msgTxt" :text="titleMsg" :confirmBtnText="qrBtn" @confirm="toLookMsg" @cancel="cancelMsg"/>
   </div>
 </template>
 <script>
@@ -73,10 +73,12 @@ import NoResult from 'base/no-result/no-result';
 import FullLoading from 'base/full-loading/full-loading';
 import Toast from 'base/toast/toast';
 import { getBanner, getDictList } from 'api/general';
-import { getPagePlayerList, queryMathPage, getMessageDetail } from 'api/miss';
+import { getPagePlayerList, queryMathPage0 } from 'api/miss';
 import { setTitle, formatImg, getUserId } from 'common/js/util';
+import { setSession, getSession } from 'common/js/cookie';
 import MFooter from 'components/m-footer/m-footer';
 import Confirm from 'base/confirm/confirm';
+import fetch from 'common/js/fetch';
 export default {
   data() {
     return {
@@ -94,7 +96,8 @@ export default {
       sellTypeObj: {},
       content: '',
       msgTxt: '赛事信息',
-      msgNum: ''
+      msgNum: 0,
+      msg: {}
     };
   },
   mounted() {
@@ -104,15 +107,21 @@ export default {
     let userId = this.getUserId();
     if(userId) {
       this.getInitData();
-      queryMathPage(1, 1).then(data => {
+      queryMathPage0(1, 1).then(data => {
         if(data.list.length > 0) {
+          this.msg = data.list[0];
           this.titleMsg = data.list[0].eventInfo.title;
-          this.$refs.confirm.show();
+          // debugger;
+          console.log(getSession(`${this.msg.id}`));
+          if(getSession(`${this.msg.id}`) !== 'false') {
+            this.$refs.confirm.show();
+          }
         }
       });
-      getMessageDetail().then(data => {
-        this.msgNum = data.list[0].unreadSum;
-      });
+      // getMessageDetail().then(data => {
+      //   this.msgNum = data.list[0].unreadSum;
+      // });
+      this.getPageMsg();
     } else {
       this.toastText = '您未登录！';
       this.$refs.toast.show();
@@ -124,6 +133,34 @@ export default {
   methods: {
     getUserId() {
       return getUserId();
+    },
+    getPageMsg() {
+      return fetch(640107, { user1: getUserId() }).then((data) => {
+        this.msgNum = +data[0].user1UnreadSum;
+        if (data.list.length) {
+          this.code = data.list[0].code;
+        }
+        if (this.loading) {
+          this.list = data.list[0].questionsList;
+        }
+        // 第一次加载无需判断
+        if (!this.loading && this.$refs.item.length &&
+          data.list[0].questionsList.length !== this.list.length) {
+          this.list = data.list[0].questionsList;
+          setTimeout(() => {
+            var elmEnd = this.$refs.item[this.$refs.item.length - 1];
+            let rect = elmEnd.getBoundingClientRect();
+            let top = rect.top + rect.height;
+            let maxTop = this.$refs.followWrapper.clientHeight -
+              this.$refs.talkBtm.offsetHeight;
+            if (top > maxTop) {
+              this.showNewMsg = true;
+            } else {
+              this.showNewMsg = false;
+            }
+          }, 20);
+        }
+      }).catch(() => {});
     },
     getInitData() {
       Promise.all([
@@ -186,8 +223,16 @@ export default {
       this.content = '';
       this.searchPlayer();
     },
-    toLookMsg(){
-      this.$router.push('/matchInfos');
+    toLookMsg() {
+      this.$router.push('match-detail?code=' + this.msg.toCode + '&id=' + this.msg.id + '&status=' + this.msg.status);
+    },
+    cancelMsg() {
+      // let msg = getSession('msg') || {};
+      // msg[this.msg.id] = false;
+      // setSession('msg', msg);
+      // this.msg = getSession('msg');
+      // console.log(this.msg);
+      setSession(`${this.msg.id}`, false);
     }
   },
   components: {

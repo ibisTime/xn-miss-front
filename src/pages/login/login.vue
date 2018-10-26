@@ -2,27 +2,33 @@
     <div class="loginAwait">
       <loading v-if="loading"></loading>
       <p v-else class="tip">跳转....</p>
+        <!--<button>重新登录</button>-->
+        <div class="login-btn" v-if="relogin" @click="logout">
+            <button @click="logout">登录</button>
+        </div>
       <!-- <input type="text" v-model="code"> -->
     </div>
 </template>
 <script>
 import { userLogin } from 'api/miss';
-import { isLogin, setUser } from 'common/js/util';
+import { isLogin, setUser, getUserId, clearUser } from 'common/js/util';
 import Loading from 'base/loading/loading';
 import Toast from 'base/toast/toast';
 import {getAppId} from 'api/general';
+import { getUserDetail } from 'api/user';
 import Confirm from 'base/confirm/confirm';
 
 export default {
   data() {
     return {
       code: '',
-      loading: true
+      loading: true,
+      relogin: false
     };
   },
   mounted() {
-    // alert(!isLogin());
     if (!isLogin()) {
+      // alert(1);
       if (this.$route.path === '/') {
         return;
       } else if (/code=([^&]+)&state=/.exec(location.href)) {
@@ -32,7 +38,27 @@ export default {
         this.AppId();
       }
     } else {
-      this.$router.push('/home');
+      // alert(2);
+      // alert('userId' + getUserId());
+      if(getUserId()) {
+        getUserDetail({userId: getUserId()}).then((res) => {
+          // alert('res' + JSON.stringify(res));
+          if(res.mobile) {
+            if(res.status === '0') {
+              this.$router.push('/home');
+            } else {
+              alert('您的账号已被锁定，请联系管理员');
+            }
+          } else {
+            this.$router.push('/register');
+          }
+        }).catch(() => {
+          this.loading = false;
+          this.relogin = true;
+        });
+      } else {
+        this.$router.push('/register');
+      }
     }
   },
   methods: {
@@ -62,12 +88,22 @@ export default {
     login() {
       userLogin(this.code).then(info => {
         setUser(info);
+        // alert('info' + JSON.stringify(info));
         if(info.isNeedMobile === '1') {
           this.$router.push('/register');
         } else {
           this.$router.push('/home');
         }
-      }).catch((msg) => { alert(msg); });
+      }).catch((msg) => {
+        alert(msg);
+        this.loading = false;
+        this.relogin = true;
+      });
+    },
+    logout() {
+      clearUser();
+      location.reload();
+      this.$router.push('/login');
     }
   },
   components: {
@@ -97,5 +133,17 @@ export default {
     text-align: center;
     margin: 0 auto;
   }
+    .login-btn {
+        margin-bottom: 0.4rem;
+        padding: 0 0.2rem;
+        button {
+            width: 100%;
+            height: 0.9rem;
+            background: $primary-color;
+            color: $color-highlight-background;
+            border-radius: 0.08rem;
+            font-size: 0.32rem;
+        }
+    }
 }
 </style>

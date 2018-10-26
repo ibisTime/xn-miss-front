@@ -7,12 +7,12 @@
             <span @click="changeCurrent('1')" :class="[current === '2' ? 'current' : '']">总榜</span>
             <span @click="changeCurrent('2')" :class="[current !== '2' ? 'current' : '']">飙升榜</span>
           </div>
-          <span v-show="sortList.length > 0" class="crown" :class="[!currentFlag ? 'crown2' : 'crown1']"></span>
+          <span v-show="sortList.length > 0" class="crown" :class="[current === '2' ? 'crown1' : 'crown2']"></span>
           <!-- <a class="no1" href="'javascript:void(0)'" :style="getImgSyl('' || sortList[0].bannerPics)"></a>
           <a class="no2" href="'javascript:void(0)'" :style="getImgSyl('' || sortList[1].bannerPics)"></a>
           <a class="no3" href="'javascript:void(0)'" :style="getImgSyl('' || sortList[2].bannerPics)"></a> -->
           <div v-for="(item, index) in sortList" :key="item.code">
-            <a :class="['no'+ (index + 1 - 0)]" href="'javascript:void(0)'" :style="getImgSyl(item.player.bannerPics)"></a>
+            <a :class="['no'+ (index + 1 - 0)]" href="'javascript:void(0)'" :style="getImgSyl(item.player.listPic)"></a>
             <div :class="['sort f' + (index + 1 - 0)]">
               <div class="ranking">NO.{{(index + 1 - 0)}}</div>
               <div class="name">{{item.player.cname}}</div>
@@ -39,7 +39,7 @@
         <div class="content1">
           <div class="session" v-for="item in sortList1" :key="item.code">
             <i>{{item.rank}}</i>
-            <a class="pic" href="'javascript:void(0)'" :style="getImgSyl(item.player.bannerPics)"></a>
+            <a class="pic" href="'javascript:void(0)'" :style="getImgSyl(item.player.listPic)"></a>
             <div class="session-right">
               <span class="name fl">{{item.player.cname}}</span>
               <span class="tickets fr">{{item.ticketSum + item.fakeTicketSum}}票</span>
