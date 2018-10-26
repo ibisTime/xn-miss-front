@@ -42,13 +42,13 @@ app.use('/api', function (req, res) {
       var reg = /^\w+\(({[^()]+})\)$/
       var matches = ret.match(reg)
       if (matches) {
-        ret = JSON.parse(matches[1])
+        ret = JSON.parse(matches[1]);
       }
     }
-    res.json(ret)
+    res.json(ret);
   }).catch((e) => {
-    console.log(e)
-  })
+    console.log(e);
+  });
 });
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {

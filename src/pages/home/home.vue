@@ -73,10 +73,9 @@ import NoResult from 'base/no-result/no-result';
 import FullLoading from 'base/full-loading/full-loading';
 import Toast from 'base/toast/toast';
 import { getBanner, getDictList } from 'api/general';
-import { getPagePlayerList } from 'api/miss';
-import { setTitle, formatImg } from 'common/js/util';
+import { getPagePlayerList, queryMathPage, getMessageDetail } from 'api/miss';
+import { setTitle, formatImg, getUserId } from 'common/js/util';
 import MFooter from 'components/m-footer/m-footer';
-import { queryMathPage, getMessageDetail } from 'api/miss';
 import Confirm from 'base/confirm/confirm';
 export default {
   data() {
@@ -102,19 +101,30 @@ export default {
     setTitle('首页');
     this.pullUpLoad = null;
     this.loading = true;
-    this.getInitData();
-    queryMathPage(1, 1).then(data => {
-      if(data.list.length > 0){
-        this.titleMsg = data.list[0].eventInfo.title;
-        this.$refs.confirm.show();
-      }
-    });
-    getMessageDetail().then(data => {
-      this.msgNum = data.list[0].unreadSum;
-    })
-
+    let userId = this.getUserId();
+    if(userId) {
+      this.getInitData();
+      queryMathPage(1, 1).then(data => {
+        if(data.list.length > 0) {
+          this.titleMsg = data.list[0].eventInfo.title;
+          this.$refs.confirm.show();
+        }
+      });
+      getMessageDetail().then(data => {
+        this.msgNum = data.list[0].unreadSum;
+      });
+    } else {
+      this.toastText = '您未登录！';
+      this.$refs.toast.show();
+      setTimeout(() => {
+        this.$router.push('/login');
+      }, 800);
+    }
   },
   methods: {
+    getUserId() {
+      return getUserId();
+    },
     getInitData() {
       Promise.all([
         getBanner(),

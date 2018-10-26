@@ -24,6 +24,7 @@
           </router-link>
       </div>
     </div>
+      <toast ref="toast" :text="text"></toast>
     <full-loading v-show="loading"></full-loading>
     <m-footer></m-footer>
   </div>
@@ -32,13 +33,14 @@
 import Scroll from 'base/scroll/scroll';
 import Slider from 'base/slider/slider';
 import FullLoading from 'base/full-loading/full-loading';
-import { setTitle, formatImg } from 'common/js/util';
+import { setTitle, formatImg, getUserId } from 'common/js/util';
 import { getFollowList, cancelFollow } from 'api/miss';
 import MFooter from 'components/m-footer/m-footer';
 export default {
   data() {
     return {
       title: '正在加载...',
+      text: '',
       loading: true,
       isFollow: false,
       start: 0,
@@ -50,9 +52,21 @@ export default {
   mounted() {
     setTitle('我的关注');
     this.pullUpLoad = null;
-    this.getInitData();
+    let userId = this.getUserId();
+    if(userId) {
+      this.getInitData();
+    } else {
+      this.text = '您未登录！';
+      this.$refs.toast.show();
+      setTimeout(() => {
+        this.$router.push('/login');
+      }, 800);
+    }
   },
   methods: {
+    getUserId() {
+      return getUserId();
+    },
     getInitData() {
       getFollowList(2, this.start, this.limit).then(data => {
         this.loading = false;

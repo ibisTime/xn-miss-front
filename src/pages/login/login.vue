@@ -67,10 +67,10 @@ export default {
         } else {
           this.$router.push('/home');
         }
-      }).catch(() => { alert('网络异常'); });
+      }).catch((msg) => { alert(msg); });
     }
   },
-  components: { 
+  components: {
     Loading,
     Confirm,
     Toast
