@@ -38,7 +38,6 @@ export default {
         this.AppId();
       }
     } else {
-      // alert(2);
       // alert('userId' + getUserId());
       if(getUserId()) {
         getUserDetail({userId: getUserId()}).then((res) => {
@@ -66,6 +65,7 @@ export default {
     AppId() {
       //  获取用户appid
       getAppId().then(res => {
+        // alert(JSON.stringify(res));
         var appId = res.cvalue;
         let redirect = `${location.origin}/${location.hash}`;
         if (this.userReferee && !/userReferee=([^&$]+)/.exec(location.href)) {
@@ -86,6 +86,7 @@ export default {
     },
     // 登陆 获取用户userId
     login() {
+      // alert(this.code);
       userLogin(this.code).then(info => {
         setUser(info);
         // alert('info' + JSON.stringify(info));

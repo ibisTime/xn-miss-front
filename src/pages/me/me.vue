@@ -23,7 +23,7 @@
         <div class="item mt20" @click="go('/follow')">
           <div class="wrap border-bottom-1px">
             <img class="icon" src="./comeOn@2x.png">
-            <span>我的加油</span>
+            <span>我的投票</span>
             <img src="./more@2x.png" class="more">
           </div>
         </div>

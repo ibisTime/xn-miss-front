@@ -33,7 +33,8 @@
               </div>
               <div class="clear"></div>
               <div class="info">身高:{{item.height}}CM  籍贯:{{item.nativePlace}}</div>
-              <div class="info">{{sellTypeObj[item.match]}}</div>
+              <!--<div class="info">{{sellTypeObj[item.match]}}</div>-->
+              <div class="info">{{item.match}}</div>
               <div class="bottom">
                 <div class="b-left fl">
                   <span class="zan"></span>
@@ -58,7 +59,7 @@
       <img @click="goService" src="./kefu@2x.png" />
       <span v-show="msgNum > 0">{{msgNum}}</span>
     </div>
-    <input @input="searchPlayer" v-model="content" type="text" class="search" placeholder="名字/赛区/籍贯">
+    <input @change="searchPlayer" v-model="content" type="text" class="search" placeholder="名字/赛区/籍贯">
     <span @click="emptyContent" class="empty"><img src="./delete.png"></span>
     <m-footer></m-footer>
     <full-loading v-show="loading" :title="title"></full-loading>
@@ -104,6 +105,7 @@ export default {
     setTitle('首页');
     this.pullUpLoad = null;
     this.loading = true;
+    // setUser({ userId: 'U201810290948070392194' });
     let userId = this.getUserId();
     if(userId) {
       this.getInitData();
@@ -111,8 +113,6 @@ export default {
         if(data.list.length > 0) {
           this.msg = data.list[0];
           this.titleMsg = data.list[0].eventInfo.title;
-          // debugger;
-          console.log(getSession(`${this.msg.id}`));
           if(getSession(`${this.msg.id}`) !== 'false') {
             this.$refs.confirm.show();
           }
@@ -121,7 +121,9 @@ export default {
       // getMessageDetail().then(data => {
       //   this.msgNum = data.list[0].unreadSum;
       // });
-      this.getPageMsg();
+      this.interval = setInterval(() => {
+        this.getPageMsg();
+      }, 1000);
     } else {
       this.toastText = '您未登录！';
       this.$refs.toast.show();
@@ -233,6 +235,14 @@ export default {
       // this.msg = getSession('msg');
       // console.log(this.msg);
       setSession(`${this.msg.id}`, false);
+    }
+  },
+  beforeDestroy() {
+    clearInterval(this.interval);
+  },
+  watch: {
+    content() {
+      this.getPagePlayer();
     }
   },
   components: {

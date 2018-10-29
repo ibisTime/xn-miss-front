@@ -19,7 +19,8 @@
                         <div class="clear"></div>
                         <div class="center">身高：{{info.height}}CM 籍贯：{{info.nativePlace}}</div>
                         <div class="bottom">
-                            <span class="match">{{sellTypeObj[info.match]}}</span>
+                            <!--<span class="match">{{sellTypeObj[info.match]}}</span>-->
+                            <span class="match">{{info.match}}</span>
                             <div class="bottom-right">
                                 <span class="b-left">
                                     <span class="zan"></span>
@@ -40,8 +41,8 @@
                 <div class="richText">
                     <p>{{info.description}}</p>
                     <div class="intructImg">
-                        <a :style="getImgSyl(info.pics)"></a>
-                        <!-- <img :src="info.listPic" alt=""> -->
+                        <!--<a :style="getImgSyl(item)" v-for="item in info.pics"></a>-->
+                         <img :src="formatImg(item)" v-for="item in info.pics">
                     </div>
                 </div>
                 <div class="comment" v-if="info.commentList.length > 0">
@@ -81,7 +82,7 @@
             </div>
             <div @click="zan">
                 <span class="zan pic"></span>
-                <span>加油</span>
+                <span>投票</span>
             </div>
         </div>
         <full-loading v-show="loading"></full-loading>
@@ -94,6 +95,7 @@ import Toast from 'base/toast/toast';
 import Slider from 'base/slider/slider';
 import FullLoading from 'base/full-loading/full-loading';
 import { setTitle, formatImg, formatDate } from 'common/js/util';
+import {initShare} from 'common/js/weixin';
 import {
   getPlayerDetail,
   getPlayerDiscuss,
@@ -131,13 +133,20 @@ export default {
     this.getInitData();
   },
   methods: {
+    formatImg(img) {
+      return formatImg(img);
+    },
     getInitData() {
+      if(!this.isWxConfiging && !this.wxData) {
+        this.getInitWXSDKConfig();
+      }
       Promise.all([
         getPlayerDetail(this.code),
-        getDictList('match'),
+        getDictList('match')
       ])
         .then(([res1, res2]) => {
           this.info = res1;
+          this.info.pics = res1.pics.split('||');
           this.isFollow = res1.isAttention === '1';
           this.bannerList = res1.bannerPics.split('||');
           res2.map(item => {
@@ -149,6 +158,43 @@ export default {
         .catch(() => {
           this.loading = false;
         });
+    },
+    getInitWXSDKConfig() {
+      this.isWxConfiging = true;
+      initShare({
+        title: '环球小姐',
+        // desc: '二手买卖',
+        // link: location.href,
+        link: location.href.split('#')[0],
+        success: (msg) => {
+          // alert(JSON.stringify(msg));
+          addFollow(1, 1, this.code).then((res) => {
+            // if(res.code) {
+            //   this.textMsg = '分享数+1';
+            //   this.$refs.toast.show();
+            // }
+          }).catch(() => {});
+          // document.addEventListener('WeixinJSBridgeReady', () => { WeixinJSBridge.call('closeWindow'); }, false);
+          // // 这个可以关闭ios系统的手机
+          // WeixinJSBridge.call('closeWindow');
+            // 用户确认分享后执行的回调函数
+        },
+        cancel: (msg) => {
+          // document.addEventListener('WeixinJSBridgeReady', () => { WeixinJSBridge.call('closeWindow'); }, false);
+          // // 这个可以关闭ios系统的手机
+          // WeixinJSBridge.call('closeWindow');
+            // 用户取消分享后执行的回调函数
+        }
+        // imgUrl: getShareImg()
+      }, (data) => {
+        this.isWxConfiging = false;
+        this.wxData = data;
+      }, () => {
+        this.isWxConfiging = false;
+        this.wxData = null;
+      }, false, (res) => {
+        setTitle('罗子林');
+      });
     },
     getDiscuss() {
       getPlayerDiscuss(this.code, this.start, this.limit)
@@ -168,9 +214,6 @@ export default {
     },
     formatDate(date, format) {
       return formatDate(date, format);
-    },
-    formatImg(img) {
-      return formatImg(img);
     },
     zan() {
       this.$router.push('/cheer?code=' + this.code);
@@ -407,15 +450,18 @@ export default {
     .intructImg {
         width: 100%;
         margin-top: .2rem;
-        height: 3.5rem;
-        a {
-            /*width: 100%;*/
-            height: 100%;
-            display: block;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: contain;
+        /*height: 3.5rem;*/
+        /*a {*/
+            /*!*width: 100%;*!*/
+            /*height: 100%;*/
+            /*display: block;*/
+            /*background-repeat: no-repeat;*/
+            /*background-position: center;*/
+            /*background-size: contain;*/
 
+        /*}*/
+        img {
+            max-width: 100%;
         }
     }
   }

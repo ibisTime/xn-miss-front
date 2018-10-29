@@ -39,6 +39,7 @@
       ])
     },
     created() {
+      // setUser({ userId: 'U201810290948070392194' });
       // if (!isLogin()) {
       //   if (/code=([^&]+)&state=/.exec(location.href)) {
       //     let code = RegExp.$1;

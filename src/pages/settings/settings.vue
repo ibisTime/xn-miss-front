@@ -36,9 +36,12 @@
       },
       logout() {
         clearUser();
-        setTimeout(() => {
-          this.go('/login');
-        }, 800);
+        document.addEventListener('WeixinJSBridgeReady', () => { WeixinJSBridge.call('closeWindow'); }, false);
+        // 这个可以关闭ios系统的手机
+        WeixinJSBridge.call('closeWindow');
+        // setTimeout(() => {
+        //   this.go('/login');
+        // }, 800);
       }
     },
     components: {

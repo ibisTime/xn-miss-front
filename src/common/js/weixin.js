@@ -15,7 +15,8 @@ let globalConfig = {};
  *   imgUrl 分享图标
  * }
  */
-export function initShare(config, suc, err, isInitImage) {
+export function initShare(config, suc, err, isInitImage, callback) {
+  // alert('config' + config.success);
   getInitWXSDKConfig().then((data) => {
     suc && suc(data);
     if (!/(\?|&)userReferee/.test(config.link)) {
@@ -32,12 +33,15 @@ export function initShare(config, suc, err, isInitImage) {
     } else {
       config.link.replace(/((?:\?|&)userReferee=)[^&$]+/, '$1' + getUserId());
     }
-    _initShare(data, config, isInitImage);
+    _initShare(data, config, isInitImage, callback);
   }).catch(() => {
     err && err();
   });
 }
 
+export function sucShare() {
+  this.$router.push('/me');
+}
 /**
  * 初始化微信支付
  * @param wxConfig: object, success: func, error: func, cancel: func
@@ -91,8 +95,10 @@ export function initShowImage () {
  *   imgUrl  分享图标
  * }
  */
-function _initShare(data, config, isInitImage) {
+function _initShare(data, config, isInitImage, callback) {
+  // alert(JSON.stringify(config));
   let jsApiList = [
+    'updateAppMessageShareData',
     'onMenuShareTimeline',
     'onMenuShareAppMessage',
     'onMenuShareQQ',
@@ -102,6 +108,7 @@ function _initShare(data, config, isInitImage) {
     jsApiList.push('previewImage');
   }
   wx.config({
+    // debug: true,
     appId: data.appId,
     timestamp: data.timestamp,
     nonceStr: data.nonceStr,
@@ -111,6 +118,9 @@ function _initShare(data, config, isInitImage) {
   wx.ready(() => {
     // 分享给某人
     wx.onMenuShareAppMessage(config);
+    // wx.updateAppMessageShareData(config, (res) => {
+    //   location.href = 'http://www.baidu.com';
+    // });
     // 朋友圈分享
     wx.onMenuShareTimeline(config);
     // qq分享

@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       title: '正在加载...',
-      loading: true,
+      loading: false,
       flag: true,
       matchList: [],
       start: 1,
@@ -54,6 +54,7 @@ export default {
       this.$router.push(url);
     },
     getPageOrders() {
+      this.loading = true;
       Promise.all([
         queryMathPage10(this.start, this.limit)
       ]).then(([res1]) => {
@@ -75,11 +76,13 @@ export default {
       }
     },
     getStatus() {
+      this.loading = true;
       getDictList('read_status').then((res) => {
         res.map((item) => {
           this.statusTxt[item.dkey] = item.dvalue;
         });
-      });
+        this.loading = false;
+      }).catch(() => { this.loading = false; });
     }
   },
   mounted() {

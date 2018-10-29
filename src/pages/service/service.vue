@@ -45,6 +45,7 @@ import Toast from 'base/toast/toast';
 import { setTitle, getUserId, formatDate, isUnDefined, formatImg } from 'common/js/util';
 import fetch from 'common/js/fetch';
 import { getUser } from 'api/user';
+import { readMessageH5 } from 'api/miss';
 
 export default {
   data() {
@@ -116,6 +117,7 @@ export default {
             }
           }, 20); // 20
         }
+        this.readMessageH5();
       }).catch(() => {});
     },
     // 定时刷新数据
@@ -179,6 +181,11 @@ export default {
     // 是否是自己发的消息
     isSelf(userId) {
       return userId === getUserId();
+    },
+    readMessageH5() {
+      readMessageH5(this.code).then((res) => {
+        // alert(JSON.stringify(res));
+      });
     }
   },
   beforeDestroy() {

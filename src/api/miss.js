@@ -14,10 +14,11 @@ import { getUserId } from 'common/js/util';
  * 获取用户详情
  */
 export function userLogin(code) {
-  return fetch(805170, {
+  let params = {
     code,
     type: 'wx_h5'
-  });
+  };
+  return fetch(805170, params);
 }
 /**
  * 绑定手机号
@@ -129,6 +130,8 @@ export function queryMathPage10(start, limit, sta) {
     userId: getUserId(),
     start,
     limit,
+    orderColumn: 'create_datetime',
+    orderDir: 'desc',
     statusList: ['1', '0']
   });
 }
@@ -139,6 +142,8 @@ export function queryMathPage0(start, limit, sta) {
     userId: getUserId(),
     start,
     limit,
+    orderColumn: 'create_datetime',
+    orderDir: 'desc',
     statusList: ['0']
   });
 }
@@ -151,7 +156,7 @@ export function readMessage(id) {
 }
 
 /**
- * 下单加油订单
+ * 下单投票订单
  */
 export function makeOrder(playerCode, ticket) {
   return fetch(640030, {
@@ -161,7 +166,7 @@ export function makeOrder(playerCode, ticket) {
   });
 }
 /**
- * 支付加油订单
+ * 支付投票订单
  */
 export function payOrder(code, payType, tradePwd) {
   return fetch(640032, {
@@ -198,7 +203,7 @@ export function fuzzyQuery(fuzzyQuery) {
   });
 }
 /**
- * 详情查询加油订单
+ * 详情查询投票订单
  */
 export function getOrderDetail(code) {
   return fetch(640036, {
@@ -212,5 +217,14 @@ export function getOrderDetail(code) {
 export function getMessageDetail() {
   return fetch(640107, {
     user1: getUserId()
+  });
+}
+
+/**
+ * 阅读回话
+ */
+export function readMessageH5(code) {
+  return fetch(640103, {
+    code
   });
 }

@@ -21,7 +21,8 @@
                 <div class="center">身高：{{info.height}}CM  籍贯：{{info.nativePlace}}</div>
                 <div class="bottom">
                   <div class="botto-left">
-                    <span class="match fl">{{sellTypeObj[info.match]}}</span>
+                    <!--<span class="match fl">{{sellTypeObj[info.match]}}</span>-->
+                    <span class="match fl">{{info.match}}</span>
                   </div>
                   <div class="botto-right">
                       <ul>
@@ -44,14 +45,14 @@
             </div>
         </div>
         <div class="cheer-num">
-          <div class="cheer-left fl">加油次数</div>
+          <div class="cheer-left fl">投票次数</div>
           <div class="cheer-right fr">
             <span class="add" @click="add"></span>
             <i class="num">{{num}}</i>
             <span class="reduce" @click="reduce"></span>
           </div>
         </div>
-        <div class="cheer-info">您已经为他加油<i>{{info.myTicketSum}}</i>次，谢谢您的支持</div>
+        <div class="cheer-info">您已经为她投票<i>{{info.myTicketSum}}</i>次，谢谢您的支持</div>
         <div class="richText">
           <p>{{info.description}}</p>
         </div>

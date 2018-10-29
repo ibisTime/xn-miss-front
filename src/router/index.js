@@ -11,7 +11,7 @@ const Register = () => import('@/pages/register/register');
 const Login = () => import('@/pages/login/login');
 // 详情页
 const Detail = () => import('@/pages/detail/detail');
-// 详情加油页
+// 详情投票页
 const Cheer = () => import('@/pages/cheer/cheer');
 // 详情支付页
 const Payment = () => import('@/pages/payment/payment');

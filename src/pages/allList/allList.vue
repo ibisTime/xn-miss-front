@@ -23,6 +23,7 @@
               </div>
               <div class="info">身高:{{item.height}}CM  籍贯:{{item.nativePlace}}</div>
               <div class="info">{{sellTypeObj[item.match]}}</div>
+              <div class="info">{{item.match}}</div>
               <div class="bottom">
                 <div class="b-left fl">
                   <span class="zan"></span>

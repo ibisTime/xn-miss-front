@@ -3,7 +3,9 @@ import {SYSTEM_CODE} from 'common/js/config';
 
 // 获取微信sdk初始化的参数
 export function getInitWXSDKConfig() {
-  return fetch(805952, {
+  return fetch(630092, {
+    companyCode: SYSTEM_CODE,
+    systemCode: SYSTEM_CODE,
     url: location.href.split('#')[0]
   });
 }
